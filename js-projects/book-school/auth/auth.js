@@ -11,4 +11,7 @@ router.post("/sign-up", (req, res, next) => {
 
   res.render("./auth/sing-up.ejs");
 });
+router.get("sign-in", (req, res) => {
+  res.send("sign-in page");
+});
 module.exports = router;
