@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Home Page</title>
+    <style>
+      form {
+        display:inline-block;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 700px;
+    position:relative;
+    top:250px;
+    left: 40%;
+      }
+ .squar{
+    display: flex;
+    justify-content: space-between;
+    width: 500px;
+ }
+ .size{
+   width: 100px;
+ }
+ 
+
+    </style>
+  </head>
+  <div>
+    
+    <form method="POST" >
+        <div class="mb-3">
+            <label for="username" class="form-label">username</label>
+            <input
+              type="text"
+              name="username"
+              class="form-control"
+              id="username"
+              aria-describedby="emailHelp"
+            />
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input
+          type="email"
+          name="email"
+          class="form-control"
+          id="email"
+          aria-describedby="emailHelp"
+        />
+        <div id="emailHelp" class="form-text">
+          We'll never share your email with anyone else.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="text"
+          name="password"
+          class="form-control"
+          id="password"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="passwordConfirmation" class="form-label">passwordConfirmation</label>
+        <input
+          type="text"
+          class="form-control"
+          id="passwordConfirmation"
+          name="passwordConfirmation"
+        />
+      </div>
+      <div class="mb-3 squar">
+        <input
+          type="number"
+          class="form-control size"
+          id="age"
+          name="age"
+          placeholder="age"
+        />
+        <input
+        type="text"
+        class="form-control size"
+        id="country"
+        name="country"
+        placeholder="country"
+      />
+     
+        
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <%- include("../script/script.ejs") %>
+  </body>
+</html>
