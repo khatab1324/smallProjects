@@ -9,15 +9,16 @@ module.exports = class Repositories {
     try {
       //check if there file have the same name
       fs.accessSync(filename); //if you want to know why we use accessSync not access watch 362
+      //that mean wait and see is filename exsit
     } catch {
       //make new file
-      fs.writeFileSync(filename, "[]");
+      fs.writeFileSync(filename, "[]"); //that mean if the file is not exsist make new one ,that what is do the writeFileSync
+      // the second agroment it mean : add []to this file
     }
   }
   async getAll() {
     //open file called this.filename
     return JSON.parse(await fs.promises.readFile(this.filename)); //the second agrument is optional you can remove it
-
     //parse the contents
     // const data = JSON.parse(contents);
     // // Ruturn the pares data

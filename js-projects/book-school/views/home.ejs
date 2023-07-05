@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>My Home Page</title>
-    <%- include("./style/homepage.ejs") %>
+    <%-// include("./style/homepage.ejs") %>
     <script
       src="https://kit.fontawesome.com/805e959fd5.js"
       crossorigin="anonymous"
@@ -20,7 +20,7 @@
     />
   </head>
   <body>
-    <%- include("./homepage/header.ejs") %> <%-include("./script/script.ejs") %>
-    <%- include("./homepage/footer.ejs") %>
+    <%-include("./script/script.ejs") %> <%- include("./homepage/header.ejs") %>
+    <%- include("./homepage/main") %> <%- include("./homepage/footer.ejs") %>
   </body>
 </html>

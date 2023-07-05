@@ -1,0 +1,40 @@
+<style>
+  .containar {
+    width: 50%;
+    height: 100%;
+    margin-left: 25%;
+    padding: 5%;
+  }
+  .containar2 {
+    display: flex;
+    justify-content: space-between;
+  }
+  .box {
+    width: 300px;
+    height: 300px;
+    margin-top: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .box:hover {
+    background-color: #e2e2e2;
+  }
+</style>
+<main>
+  <div class="containar">
+    <div class="containar2">
+      <a href="/books"><button class="box">your books</button></a>
+      <a href="/exams"><button class="box">exams</button></a>
+    </div>
+    <div class="containar2">
+      <a href="/videos"><button class="box">learn videos</button></a>
+      <a href="/summary-note"><button class="box">summary and note</button></a>
+    </div>
+  </div>
+</main>
