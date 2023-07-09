@@ -19,11 +19,27 @@ router.post("/sign-up", async (req, res, next) => {
   });
   console.log(user);
 
-  // req.session.userId = user.id;
-  // req.session.email = user.email;
+  req.session.userId = user.id;
+  req.session.email = user.email;
   res.render("./auth/welcom");
 });
-router.get("sign-in", (req, res) => {
-  res.send("sign-in page");
+router.get("/sign-in", async (req, res) => {
+  res.render("./auth/sing-in");
+});
+router.post("/sign-in", async (req, res) => {
+  const { email } = req.body;
+  const user = await UserRepo.getOneBy({ email });
+  console.log(user);
+
+  if (user) {
+    req.session.userId = user.id;
+    req.session.email = user.email;
+
+    res.render("./auth/welcom");
+  }
+});
+router.get("/sign-out", (req, res) => {
+  req.session = null; //we clear the coockies
+  res.redirect("/");
 });
 module.exports = router;

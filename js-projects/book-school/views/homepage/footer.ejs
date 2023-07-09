@@ -5,6 +5,7 @@
   <!-- Grid container -->
   <div class="container p-4 pb-0">
     <!-- Section: CTA -->
+    <% if(!userId){ %>
     <section class="">
       <p class="d-flex justify-content-center align-items-center">
         <span class="me-3">Register for free</span>
@@ -15,7 +16,11 @@
         >
       </p>
     </section>
-    <!-- Section: CTA -->
+    <% }else{ %>
+    <p class="d-flex justify-content-center align-items-center">
+      <span class="me-3">love your self <%=user.username %></span>
+    </p>
+    <% } %>
 
     <hr class="mb-4" />
 
