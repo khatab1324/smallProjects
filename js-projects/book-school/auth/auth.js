@@ -3,6 +3,7 @@ const UserRepo = require("../repositories/users");
 const app = express();
 const router = express.Router();
 const signupTemplate = require("../views/auth/sign-up");
+const signinTemplate=require('../views/auth/sign-in')
 const {
   usernameRequire,
   requireEmail,
@@ -10,6 +11,8 @@ const {
   requireCountry,
   requirePassword,
   requirePasswordConfirmatio,
+  requireEmailExistOrUsername,
+  requireValidPasswordForUser,
 } = require("../validation/validation");
 const { handleErrors } = require("../validation/middleware");
 
@@ -48,18 +51,23 @@ router.post(
 router.get("/sign-in", async (req, res) => {
   res.render("./auth/sing-in");
 });
-router.post("/sign-in", async (req, res) => {
-  const { email } = req.body;
-  const user = await UserRepo.getOneBy({ email });
-  console.log(user);
+router.post(
+  "/sign-in",
+  [requireEmailExistOrUsername, requireValidPasswordForUser],
+  handleErrors(signinTemplate),
+  async (req, res) => {
+    const { email } = req.body;
+    const user = await UserRepo.getOneBy({ email });
+    console.log(user);
 
-  if (user) {
-    req.session.userId = user.id;
-    req.session.email = user.email;
+    if (user) {
+      req.session.userId = user.id;
+      req.session.email = user.email;
 
-    res.render("./auth/welcom");
+      res.render("./auth/welcom");
+    }
   }
-});
+);
 router.get("/sign-out", (req, res) => {
   req.session = null; //we clear the coockies
   res.redirect("/");

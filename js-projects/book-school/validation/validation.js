@@ -59,4 +59,35 @@ module.exports = {
     .withMessage("plz provide name your country")
     .isLength({ min: 2 })
     .withMessage("plz provide Full Name for your country"),
+
+  //for singIn
+  requireEmailExistOrUsername: check("email")
+    .trim()
+    .normalizeEmail()
+    .isEmail()
+    .withMessage("Must provide a valid email")
+    .custom(async (email, username) => {
+      const userEmail = await UserRepo.getOneBy({ email });
+
+      if (!userEmail) {
+        throw new Error("Email or username not found!");
+      }
+      return true;
+    }),
+  requireValidPasswordForUser: check("password")
+    .trim()
+    .custom(async (password, { req }) => {
+      const user = await UserRepo.getOneBy({ email: req.body.email });
+      if (!user) {
+        throw new Error("Invalid password");
+      }
+
+      const validPassword = await UserRepo.comparePassword(
+        user.password,
+        password
+      );
+      if (!validPassword) {
+        throw new Error("Invalid password");
+      }
+    }),
 };
