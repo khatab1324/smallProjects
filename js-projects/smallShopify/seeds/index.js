@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const storesSeeds = require("./storesSeeds");
-const Store = require("../models/store");
+const { places, descriptors } = require("./storesSeeds");
+const cities = require("./cities");
+const Store = require("../models/store"); //this our schema and remember we are define it before define our data
 mongoose
   .connect("mongodb://localhost:27017/smallshopify", {
     useNewUrlParser: true,
@@ -13,14 +14,20 @@ mongoose
     console.log("OH NO MONGO CONNECTION ERROR!!!!");
     console.log(err);
   });
-
+//sample to bike random name
+const sample = (array) => array[Math.floor(Math.random() * array.length)];
 const seedDB = async () => {
-  for (let i = 0; i < 2; i++) {
+  await Store.deleteMany({}); //to not overwrite
+  for (let i = 0; i < 4; i++) {
+    const random1000 = Math.floor(Math.random() * 1000);
     const store = new Store({
-      location: "amman",
-      title: "the best in the west",
-      description: "gggggggggggggggggggggggggggggggggggggggggggggggg",
+      //new form schema
+      location: cities[random1000].city,
+      title: `${sample(descriptors)} ${sample(places)}`,
+      description:
+        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis possimus architecto magni, quia maiores dolor, omnis totam ullam, nulla odio eaque qui perspiciatis et? Quos deleniti non animi fuga ex?",
       price: 23,
+      //there just remain athoer and img and geometry
     });
     await store.save();
   }
