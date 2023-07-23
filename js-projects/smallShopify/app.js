@@ -1,6 +1,10 @@
 // =================require laibaryes===============
 const express = require("express");
 const mongoose = require("mongoose");
+//====================for ejs======================
+const path = require("path");
+const ejsMate = require("ejs-mate");
+// ================================================
 const app = express();
 // ==============require files ====================
 const storeRouter = require("./routers/store");
@@ -19,11 +23,16 @@ mongoose
     console.log(err);
   });
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.engine("ejs", ejsMate);
+
+app.use(express.static(path.join(__dirname, "public")));
 // =====================use router===============
 app.use(storeRouter);
 
 app.get("/", (req, res) => {
-  res.send("hello wolrd ,here I am");
+  res.render("home");
 });
 
 port = 2004;
