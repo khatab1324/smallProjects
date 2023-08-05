@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+      integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/stylesheets/home.css" />
+  </head>
+  <body class="position-relative">
+    <%- include("../partials/navbar") %>
+    <!--  -->
+
+    <% for (let store of stores){%>
+    <div class="d-inline-block">
+      <div class="card text-center" style="width: 18rem">
+        <img src="<%= store.image %>" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h5 class="card-title"><%= store.title%></h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+    <% }%> <%- include("../partials/footer")
+    %><%-include("../partials/script")%>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 // =================require laibaryes===============
 const express = require("express");
 const mongoose = require("mongoose");
-//when you require connect-mongo use the last version and read some doc pleas don't follow colt code that will cause errors for you there fix in leture number 586 is not huge
+//when you require connect-mongo for store session use the last version and read some doc pleas don't follow colt code that will cause errors for you there fix in leture number 586 is not huge
 //====================for ejs======================
 const path = require("path");
 const ejsMate = require("ejs-mate");
