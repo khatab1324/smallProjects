@@ -17,8 +17,11 @@ router.post(
   }),
   (req, res) => {
     req.flash("success", "welcome back!");
+
     console.log(req.session.returnTo);
     const redirectUrl = res.locals.returnTo || "/stores";
+    
+
     res.redirect(redirectUrl);
   }
 );

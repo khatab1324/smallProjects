@@ -1,11 +1,11 @@
 // =================require laibaryes===============
 const express = require("express");
 const mongoose = require("mongoose");
-const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const MongoDBStore = require("connect-mongo");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 //when you require connect-mongo for store session use the last version and read some doc pleas don't follow colt code that will cause errors for you there fix in leture number 586 is not huge
 //====================for ejs======================
 const path = require("path");
@@ -35,20 +35,29 @@ mongoose
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
+// =========================session====================
+const dbUrl = "mongodb://localhost:27017/myDatabase";
 
+const storeSession = MongoStore.create({
+  mongoUrl: dbUrl,
+  touchAfter: 24 * 60 * 60,
+  crypto: {
+    secret: "thisshouldbeabettersecret!",
+  },
+});
+storeSession.on("error", function (e) {
+  console.log("session store error", e);
+});
 const sessionConfig = {
-  name: "session", //this will give our cooke a name//to no one see the defult name and stele it and pretend to be the otherone
+  name: "session",
   secret: "thisSecretKey",
   resave: false,
   saveUninitialized: true,
   cookie: {
-    //now i wrtie my cookies open cookies you will find it
-    httpOnly: true, //this for securty of cookies you can search just search httpOnly//This basically says that our cookies, at least the ones that are set through the session, are only accessible over HTTP, they're not accessible through JavaScript. So if somebody were to write a script or somehow write some JavaScript that executes on our site and extracts cookies, they would not be able to see our session cookie.
+    httpOnly: true,
     //  secure:true;//Basically, it says that this cookie should only work over https.
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //this number is week long//this becuase Date.now its number like this 1688917466197
     maxAge: 1000 * 60 * 60 * 24 * 7,
-    // NOTE: we use expires for ,like user sign-in ,we won't from him to sign for ever becuase of that after week the expire finsh and he will sign out
-    // my date now is 2023/7/6 if you open the cookies you will find in expires 2023-07-16T15:43:43.716Z
   },
 };
 app.use(session(sessionConfig));
