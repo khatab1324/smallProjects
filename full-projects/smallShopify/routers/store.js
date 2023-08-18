@@ -10,6 +10,7 @@ router.get("/stores", async (req, res) => {
   if (req.session.passport) {
     username = req.session.passport.user;
   }
+
   res.render("Stores/stores", { storesData, username });
 });
 

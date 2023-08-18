@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV !== "production") {
+  //if we are in development mode it will work
+  require("dotenv").config();
+}
+
 // =================require laibaryes===============
 const express = require("express");
 const mongoose = require("mongoose");
@@ -7,6 +12,7 @@ const LocalStrategy = require("passport-local");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 //when you require connect-mongo for store session use the last version and read some doc pleas don't follow colt code that will cause errors for you there fix in leture number 586 is not huge
+const multer = require("multer");
 //====================for ejs======================
 const path = require("path");
 const ejsMate = require("ejs-mate");
@@ -16,6 +22,7 @@ const app = express();
 const User = require("./models/users");
 const storeRouter = require("./routers/store");
 const authenticateRouter = require("./routers/authantication");
+const authanticationStoreRouter = require("./routers/authenticationStore");
 
 mongoose.set("strictQuery", false); //DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7. Use `mongoose.set('strictQuery', false);` if you want to prepare for this change. Or use `mongoose.set('strictQuery', true);` to suppress this warning.
 mongoose
@@ -75,7 +82,7 @@ passport.deserializeUser(User.deserializeUser());
 // =====================use router===============
 app.use(storeRouter);
 app.use(authenticateRouter);
-
+app.use(authanticationStoreRouter);
 app.get("/", (req, res) => {
   res.render("home");
 });

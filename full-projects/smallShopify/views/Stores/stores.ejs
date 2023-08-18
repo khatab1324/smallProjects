@@ -12,7 +12,23 @@
     <% for (let storeData of storesData){%>
     <div class="d-inline-block">
       <div class="card text-center" style="width: 18rem">
-        <img src="<%= storeData.image %>" class="card-img-top" alt="..." />
+        <div class="carousel-inner">
+          <%if(storeData.images.length) {%><!--if there no image I will pass defult image  -->
+          <img
+            crossorigin="anonymous"
+            class="img-fluid"
+            alt=""
+            src="<%=storeData.images[0].url%>"
+          />
+          <% }else {%>
+          <img
+            crossorigin="anonymous"
+            class="img-fluid"
+            alt=""
+            src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png"
+          />
+          <% } %>
+        </div>
         <div class="card-body">
           <h5 class="card-title"><%= storeData.title%></h5>
           <p class="card-text">
