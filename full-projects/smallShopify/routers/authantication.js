@@ -1,13 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const multer = require("multer");
-const { cloudinary } = require("../cloudinary");
-const { storage } = require("../cloudinary");
-const upload = multer({ storage });
 const User = require("../models/users");
-const Stores = require("../models/store");
-const StoreData = require("../models/storeseparatedData");
 
 router.get("/sign-in-user", (req, res) => {
   res.render("users/loginUser");

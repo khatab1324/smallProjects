@@ -20,7 +20,7 @@ const ejsMate = require("ejs-mate");
 const app = express();
 // ==============require files ====================
 const User = require("./models/users");
-const storeRouter = require("./routers/store");
+const storeRouter = require("./routers/stores");
 const authenticateRouter = require("./routers/authantication");
 const authanticationStoreRouter = require("./routers/authenticationStore");
 
