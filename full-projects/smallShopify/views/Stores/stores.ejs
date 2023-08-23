@@ -1,3 +1,4 @@
+<% layout('layout/boilerplate') %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,7 +10,8 @@
     <%- include("../partials/navbar") %>
     <!--  -->
 
-    <% for (let storeData of storesData){%>
+    <!--  -->
+    <% for (let storeData of stores){%>
     <div class="d-inline-block">
       <div class="card text-center" style="width: 18rem">
         <div class="carousel-inner">
@@ -25,7 +27,7 @@
             crossorigin="anonymous"
             class="img-fluid"
             alt=""
-            src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png"
+            src="https://res.cloudinary.com/dd4vh5wfd/image/upload/v1692446564/Stores/pfmibpg4uvuq2ruf17eu.jpg"
           />
           <% } %>
         </div>
@@ -35,13 +37,12 @@
             Some quick example text to build on the card title and make up the
             bulk of the card's content.
           </p>
-          <a href="/store/<%= storeData.id %>" class="btn btn-primary"
+          <a href="/store/<%= storeData.id %>" class="btn btn-dark"
             >Go somewhere</a
           >
         </div>
       </div>
     </div>
-    <% }%> <%- include("../partials/footer")
-    %><%-include("../partials/script")%>
+    <% }%> <%- include("../partials/footer") %>
   </body>
 </html>

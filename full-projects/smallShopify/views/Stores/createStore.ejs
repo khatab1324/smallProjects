@@ -1,3 +1,4 @@
+<% layout('layout/boilerplate') %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -90,11 +91,12 @@
     <link rel="stylesheet" href="/stylesheets/home.css" />
   </head>
   <body>
+    
     <div
       class="container w-25 d-flex justify-content-center align-items-center mt-5"
     >
       <form
-        action="/register-store"
+        action="/create-store"
         method="POST"
         class="validated-form"
         enctype="multipart/form-data"
@@ -107,29 +109,14 @@
             <input
               class="form-control"
               type="text"
-              name="username"
-              id="username"
-              placeholder="username"
+              name="author"
+              id="author"
+             
+              placeholder="author"
             />
           </div>
-          <div class="input-group mb-3">
-            <input
-              class="form-control"
-              type="text"
-              name="email"
-              id="email"
-              placeholder="email"
-            />
-          </div>
-          <div class="input-group mb-3">
-            <input
-              class="form-control"
-              type="password"
-              name="password"
-              id="password"
-              placeholder="password"
-            />
-          </div>
+          
+          
         </div>
         <div class="store-info">
           <h3>info about your store</h3>
@@ -177,7 +164,7 @@
               </label>
             </div>
         <button class="btn btn-outline-dark justify-content-md-end">
-          send
+          bay 10$
         </button>
       </form>
     </div>

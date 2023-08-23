@@ -1,22 +1,10 @@
 const mongoose = require("mongoose");
 // you need to add review
 const Schema = mongoose.Schema;
-const passportLocalMongoose = require("passport-local-mongoose");
-const ImageSchema = new Schema({
-  url: String,
-  filename: String,
-});
-const storeShema = new Schema({
-  password: String,
-  username: String,
-
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-
-  storeData: {
+const opts = { toJSON: { virtuals: true } };
+const storeShema = new Schema(
+  {
+    author: { type: Schema.Types.ObjectId, ref: "User" },
     images: [
       {
         url: String,
@@ -28,6 +16,7 @@ const storeShema = new Schema({
     price: Number,
     location: String,
   },
-});
-storeShema.plugin(passportLocalMongoose);
+  opts
+);
+
 module.exports = mongoose.model("store", storeShema);

@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const passport = require("passport");
 const User = require("../models/users");
+const multer = require("multer");
+const passport = require("passport");
+const { storage } = require("../cloudinary");
+const upload = multer({ storage });
 
 router.get("/sign-in-user", (req, res) => {
   res.render("users/loginUser");
@@ -26,6 +29,11 @@ router.post(
 router.get("/registerOrUser", (req, res) => {
   res.render("users/storeOrUser");
 });
+
+router.get("/sign-in-user-or-store", (req, res) => {
+  res.render("users/signInUserOrStore");
+});
+
 // ============register user========================
 router.get("/register-user", (req, res) => {
   res.render("users/registerUser");
