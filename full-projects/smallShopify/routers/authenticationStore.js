@@ -4,6 +4,7 @@ const multer = require("multer");
 const { storage } = require("../cloudinary");
 const upload = multer({ storage });
 const Stores = require("../models/store");
+const users = require("../models/users");
 
 // ===========register store and make it ========================
 // router.get("/register-store", upload.array("images"), (req, res) => {
@@ -49,11 +50,16 @@ const Stores = require("../models/store");
 // );
 
 // ===============================create store=================
-router.get("/create-store", upload.array("images"), (req, res) => {
+router.get("/create-store", upload.array("images"), async (req, res) => {
   console.log(req.session);
-
+  let author;
+  let user;
+  if (req.session.passport) {
+    author = req.session.passport.user;
+    user = await users.findOne({ username: author });
+  }
   req.flash("success", "Successfully made a new campground!");
-  res.render("Stores/createStore");
+  res.render("Stores/createStore", { author, user });
 });
 router.post("/create-store", upload.array("images"), async (req, res) => {
   const store = new Stores(req.body);
@@ -66,7 +72,5 @@ router.post("/create-store", upload.array("images"), async (req, res) => {
   await store.save();
   res.redirect("/stores");
 });
-router.get("/sign-in-store", (req, res) => {
-  res.render("Stores/signInStore");
-});
+
 module.exports = router;

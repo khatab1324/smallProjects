@@ -103,7 +103,7 @@
         novalidate
       >
         <div class="user-info">
-          <h3>info about you</h3>
+          <h3>info about you this here bug mongose need email and username</h3>
           <div class="input-group mb-3">
             <span class="input-group-text" id="addon-wrapping">@</span>
             <input
@@ -111,8 +111,30 @@
               type="text"
               name="author"
               id="author"
-             
+              value="<%=author%>"
               placeholder="author"
+            />
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="addon-wrapping">@</span>
+            <input
+              class="form-control"
+              type="text"
+              name="username"
+              id="username"
+              value="<%=author%>"
+              placeholder="username"
+            />
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="addon-wrapping">@</span>
+            <input
+              class="form-control"
+              type="text"
+              name="email"
+              id="email"
+             value="<%= user.email %>"
+              placeholder="email"
             />
           </div>
           
@@ -162,6 +184,7 @@
                 >
                 <span class="form-file-button">Browse</span>
               </label>
+            </div>
             </div>
         <button class="btn btn-outline-dark justify-content-md-end">
           bay 10$

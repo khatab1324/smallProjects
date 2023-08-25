@@ -4,7 +4,9 @@ const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true } };
 const storeShema = new Schema(
   {
-    author: { type: Schema.Types.ObjectId, ref: "User" },
+    username: String,
+    email: String,
+    author: String,
     images: [
       {
         url: String,
@@ -13,8 +15,13 @@ const storeShema = new Schema(
     ],
     title: String,
     description: String,
-    price: Number,
     location: String,
+    products: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
   },
   opts
 );

@@ -122,49 +122,27 @@
       <button class="btn btn-success">Submit</button>
   </div>
   <h1>products</h1>
-  
-  <div class="d-flex">
+ 
+  <a href="/store/<%= store.id %>/create-product">add prouct</a>
+  <%for(let product of store.products){  %>
     
-  <div class="card" style="width: 18rem;">
-    <img src="https://res.cloudinary.com/dd4vh5wfd/image/upload/v1692446564/Stores/pfmibpg4uvuq2ruf17eu.jpg" class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">discrption</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-  </div>
-    <div class="card" style="width: 18rem;">
-      <img src="https://res.cloudinary.com/dd4vh5wfd/image/upload/v1692446564/Stores/pfmibpg4uvuq2ruf17eu.jpg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">discrption</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-      <img src="https://res.cloudinary.com/dd4vh5wfd/image/upload/v1692446564/Stores/pfmibpg4uvuq2ruf17eu.jpg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">discrption</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-      <img src="https://res.cloudinary.com/dd4vh5wfd/image/upload/v1692446564/Stores/pfmibpg4uvuq2ruf17eu.jpg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">discrption</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-      <img src='https://res.cloudinary.com/dd4vh5wfd/image/upload/v1692446564/Stores/pfmibpg4uvuq2ruf17eu.jpg' class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">discrption</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-  </div>  
-  </div>
+            <div class="d-flex">
+              <div class="card" style="width: 18rem;">
+              <% if(product.images.length){ %>
+                <img src="<%= product.images[0].url %>" class="card-img-top" alt="...">
+              <% }else {%>
+                <img
+                 crossorigin="anonymous"
+                 class="img-fluid"
+                 alt=""
+                 src="https://res.cloudinary.com/dd4vh5wfd/image/upload/v1692446564/Stores/pfmibpg4uvuq2ruf17eu.jpg"/>
+              <% } %>
+                 <div class="card-body">
+                    <h5 class="card-title"><%= product.title %></h5>
+                    <p class="card-text">discrption</p>
+                    <a href="/store/<%=store.id%>/<%=product.id%>" class="btn btn-primary">Go somewhere</a>
+                 </div>
+              </div>
+         
+  <% } %>
 </div>

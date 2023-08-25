@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f4f4f4;
+      }
+      .product-container {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 400px;
+        text-align: center;
+      }
+      .product-image {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="product-container">
+      <img
+        class="product-image"
+        src="https://example.com/smartphonex.jpg"
+        alt="SmartphoneX"
+      />
+      <h1>SmartphoneX</h1>
+      <p>The ultimate smartphone with advanced features.</p>
+      <p>Price: $699.99</p>
+      <button onclick="addToCart()">Add to Cart</button>
+    </div>
+    <script>
+      function addToCart() {
+        alert("Product added to cart!");
+        // You can add more logic here, like updating the cart count, etc.
+      }
+    </script>
+  </body>
+</html>
