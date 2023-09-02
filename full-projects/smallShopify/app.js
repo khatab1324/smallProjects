@@ -13,6 +13,8 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 //when you require connect-mongo for store session use the last version and read some doc pleas don't follow colt code that will cause errors for you there fix in leture number 586 is not huge
 const multer = require("multer");
+const methodOverride = require("method-override");
+const mongoSanitize = require("express-mongo-sanitize");
 //====================for ejs======================
 const path = require("path");
 const ejsMate = require("ejs-mate");
@@ -22,7 +24,6 @@ const app = express();
 const User = require("./models/users");
 const storeRouter = require("./routers/stores");
 const authenticateRouter = require("./routers/authantication");
-const authanticationStoreRouter = require("./routers/authenticationStore");
 
 mongoose.set("strictQuery", false); //DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7. Use `mongoose.set('strictQuery', false);` if you want to prepare for this change. Or use `mongoose.set('strictQuery', true);` to suppress this warning.
 mongoose
@@ -88,9 +89,9 @@ app.use((req, res, next) => {
   next();
 });
 // =====================use router===============
-app.use(storeRouter);
+
 app.use(authenticateRouter);
-app.use(authanticationStoreRouter);
+app.use(storeRouter);
 app.get("/", (req, res) => {
   res.render("home");
 });

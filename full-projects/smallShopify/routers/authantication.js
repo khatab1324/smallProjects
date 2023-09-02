@@ -25,15 +25,6 @@ router.post(
     res.redirect(redirectUrl);
   }
 );
-
-router.get("/registerOrUser", (req, res) => {
-  res.render("users/storeOrUser");
-});
-
-router.get("/sign-in-user-or-store", (req, res) => {
-  res.render("users/signInUserOrStore");
-});
-
 // ============register user========================
 router.get("/register-user", (req, res) => {
   res.render("users/registerUser");
