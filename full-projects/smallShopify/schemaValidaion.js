@@ -27,7 +27,7 @@ module.exports.storeSchema = Joi.object({
   location: Joi.string().required().escapeHTML(),
   description: Joi.string().required().escapeHTML(),
   author: Joi.string().required().escapeHTML(),
-  usernam: Joi.string().required().escapeHTML(),
+  username: Joi.string().required().escapeHTML(),
   email: Joi.string().required().escapeHTML(),
   // }).required(),
   deleteImages: Joi.array(),

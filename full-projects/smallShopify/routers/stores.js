@@ -86,7 +86,6 @@ router.get(
   "/create-store",
   isLoggedIn,
   upload.array("images"),
-  validateStore,
   catchAsync(async (req, res) => {
     console.log(req.session);
     let author;
@@ -98,6 +97,23 @@ router.get(
     req.flash("success", "Successfully made a new campground!");
     res.render("Stores/createStore", { author, user });
   })
+);
+router.post(
+  "/create-store",
+  isLoggedIn,
+  upload.array("images"),
+  validateStore,
+  async (req, res) => {
+    const store = new Stors(req.body);
+    store.images = req.files.map((f) => ({
+      url: f.path,
+      filename: f.filename,
+    }));
+    store.author = req.user._id;
+    console.log(store);
+    await store.save();
+    res.redirect("/stores");
+  }
 );
 
 module.exports = router;
