@@ -40,4 +40,23 @@ router.post("/store/:storeId", async (req, res) => {
   res.redirect(`/store/${storeId}`);
 });
 
+// ============show products=========
+router.get("/store/:storeId/showProducts", async (req, res) => {
+  const { storeId } = req.params;
+  const store = await Stors.findById(storeId).populate("products");
+  // const product= sotre.id.populate()
+  console.log(store);
+  const products = store.products;
+  res.render("Stores/product/showProducts", { store, products });
+});
+// ============delete product
+router.post("/store/:storeId/:productId/delete", async (req, res) => {
+  const { storeId, productId } = req.params;
+  await Product.findByIdAndDelete(productId); //if change the findByIdAndDelete the mongose middlewere (findOneAndDelete)will not work, becuase it can't trigger the middlware
+  req.flash("success", "Successfully deleted campground");
+  // we have res.locals.success = req.flash("success"); this locals we don't need to pass it to ejs
+  // ...it just will take the message that above and pass it to ejs
+  res.redirect(`/store/${storeId}/showProducts`);
+});
+
 module.exports = router;
