@@ -52,11 +52,15 @@ router.get("/store/:storeId/showProducts", async (req, res) => {
 // ============delete product
 router.post("/store/:storeId/:productId/delete", async (req, res) => {
   const { storeId, productId } = req.params;
-  await Product.findByIdAndDelete(productId); //if change the findByIdAndDelete the mongose middlewere (findOneAndDelete)will not work, becuase it can't trigger the middlware
+  await Product.findByIdAndDelete(productId);
   req.flash("success", "Successfully deleted campground");
-  // we have res.locals.success = req.flash("success"); this locals we don't need to pass it to ejs
-  // ...it just will take the message that above and pass it to ejs
   res.redirect(`/store/${storeId}/showProducts`);
+});
+router.post("/store/:storeId/delete", async (req, res) => {
+  const { storeId } = req.params;
+  await Stors.findByIdAndDelete(storeId);
+  req.flash("success", "Successfully deleted campground");
+  res.redirect(`/stores`);
 });
 
 module.exports = router;
