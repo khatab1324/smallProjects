@@ -55,5 +55,15 @@ router.post("/register-user", async (req, res) => {
     res.redirect("/register-user");
   }
 });
+router.get("/sign-out", (req, res) => {
+  req.logout(function (err) {
+    //logout its come with passport
+    if (err) {
+      return next(err);
+    }
+    req.flash("success", "Goodbye!");
+    res.redirect("/stores");
+  });
+});
 
 module.exports = router;

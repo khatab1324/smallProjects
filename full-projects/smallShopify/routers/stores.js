@@ -6,6 +6,7 @@ const upload = multer({ storage });
 const Stors = require("../models/store");
 const Product = require("../models/products");
 const users = require("../models/users");
+const StoreReviews = require("../models/StoreReviews");
 
 const catchAsync = require("../utile/catchAsync");
 const {
@@ -13,6 +14,7 @@ const {
   isAuthor,
   validateStore,
   validateProduct,
+  validateReview,
 } = require("../validation");
 const products = require("../models/products");
 
@@ -33,10 +35,19 @@ router.get(
   "/store/:id",
   catchAsync(async (req, res) => {
     const { id } = req.params;
-    const store = await Stors.findById(id).populate("products");
+    const store = await Stors.findById(id)
+      .populate("products")
+      .populate({
+        path: "StoreReviews",
+        populate: {
+          path: "author",
+        },
+      });
+    console.log(store);
     res.render("Stores/showStore", { store });
   })
 );
+
 // =====================product=================
 router.get(
   "/store/:id/create-product",
@@ -91,6 +102,7 @@ router.get(
     let author;
     let user;
     if (req.session.passport) {
+      // you can use req.user make refactor
       author = req.session.passport.user;
       user = await users.findOne({ username: author });
     }
@@ -111,9 +123,28 @@ router.post(
     }));
     store.author = req.user._id;
     console.log(store);
+    await users.findByIdAndUpdate(req.user.id, { store: store._id });
     await store.save();
     res.redirect("/stores");
   }
 );
 
+//============================ review =================
+router.post(
+  "/store/:storeId/reviews",
+  isLoggedIn,
+  validateReview,
+  async (req, res) => {
+    const { storeId } = req.params;
+    console.log(req.body);
+    const store = await Stors.findById(storeId);
+    const storeReview = new StoreReviews(req.body.review);
+    store.StoreReviews.push(storeReview);
+    storeReview.author = req.user._id;
+    storeReview.save();
+    store.save();
+    console.log(req.user);
+    res.redirect(`/store/${storeId}/`);
+  }
+);
 module.exports = router;

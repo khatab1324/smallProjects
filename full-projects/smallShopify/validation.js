@@ -1,4 +1,4 @@
-const { storeSchema } = require("./schemaValidaion");
+const { storeSchema, reviewSchema } = require("./schemaValidaion");
 const { productSchema } = require("./schemaValidaion");
 const ExpressError = require("./utile/ExpressError");
 const Store = require("./models/store");
@@ -40,6 +40,15 @@ module.exports.isAuthor = async (req, res, next) => {
 };
 module.exports.validateProduct = (req, res, next) => {
   const { error } = productSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+module.exports.validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new ExpressError(msg, 400);

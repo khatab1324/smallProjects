@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-// you need to add review
 const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true } };
+const StoreReview = require("./StoreReviews");
 const storeShema = new Schema(
   {
     username: String,
@@ -20,6 +20,12 @@ const storeShema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Product",
+      },
+    ],
+    StoreReviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "StoreReview",
       },
     ],
   },

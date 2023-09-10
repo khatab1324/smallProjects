@@ -56,7 +56,7 @@
             Submited by : <%= //store.author.username%>
           </li>
         </ul>
-        <%// if( currentUser && store.author.equals(currentUser._id)) {%><!-- this is mean if the currnetUser exsist and store.author equail to currentUser._id show this button -->
+        <!-- <% //if( currentUser && store.author.equals(currentUser._id)) {%>this is mean if the currnetUser exsist and store.author equail to currentUser._id show this button -->
         <div class="card-body">
           <a class="card-link btn btn-info" href="/stores/<%=store._id%>/controle"
             >Controle</a
@@ -70,7 +70,7 @@
       <% //if(currentUser){ %>
       <h2>Leave a Review</h2>
       <form
-        action="/stores/<%=store._id%>/reviews"
+        action="/store/<%=store._id%>/reviews"
         method="POST"
         class="mb-3 validated-form"
         novalidate
@@ -126,23 +126,25 @@
           <label for="first-rate5" title="Amazing">5 stars</label>
         </fieldset>
         <div class="mb-3">
-          <label class="form-label" for="body">Review Text</label>
+          <label class="form-label" for="comment">Review Text</label>
           <textarea
             class="form-control"
-            name="review[body]"
-            id="body"
+            name="review[comment]"
+            id="comment"
             cols="30"
             rows="3"
             required
           ></textarea>
           <div class="valid-feedback">Looks good!</div>
         </div>
-        <button class="btn btn-success">Submit</button>
-        <h1>products</h1>
+        <button class="btn btn-dark">Submit</button>
+        
+      </form>
+      <h1>products</h1>
         
           <a href="/store/<%= store.id %>/create-product">add prouct</a>
           
-          <div id="storeCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
               <div class=" d-flex"> 
             <% store.products.forEach((product, i) => { %>
@@ -187,7 +189,7 @@
             <% if(store.products.length > 1) {%>
               <a
           class="carousel-control-prev"
-          href="#storeCarousel"
+          href="#productCarousel"
           role="button"
           data-bs-slide="prev"
         >
@@ -196,7 +198,7 @@
         </a>
         <a
           class="carousel-control-next"
-          href="#storeCarousel"
+          href="#productCarousel"
           role="button"
           data-bs-slide="next"
         >
@@ -207,7 +209,27 @@
               
           </div>
         </div>
-      </form>
+        <h1 class="">Reviews</h1>
+        <% for(let review of store.StoreReviews) { %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><%= review.author.username%></h5>
+              <p class="starability-result" data-rating="<%=review.rating%>">
+                Rated: <%= review.rating %> stars
+              </p>
+              <!-- <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username%></h6> -->
+              <p class="card-text">Review: <%= review.comment %></p>
+              <% //if( currentUser && review.author.equals(currentUser._id)) {%>
+              <form
+                action="/store/<%=store._id%>/reviews/<%=review._id%>?_method=DELETE"
+                method="POST"
+              >
+                <button class="btn btn-sm btn-danger">Delete</button>
+              </form>
+              <% //} %>
+            </div>
+          </div>
+          <% } %>
     </div>
   </div>
 </div>
