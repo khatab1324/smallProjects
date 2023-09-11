@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true } };
 const StoreReview = require("./StoreReviews");
+const Product = require("./products");
+
 const storeShema = new Schema(
   {
     username: String,
@@ -31,5 +33,27 @@ const storeShema = new Schema(
   },
   opts
 );
+
+// ==================I don't know what is these=============
+storeShema.virtual("properties.popUpMarkup").get(function () {
+  return `<strong><a href="/campgrounds/${this._id}">${this.title}</a><strong>
+  <p>${this.description.substring(0, 20)}...</p>`;
+});
+
+// here when you delete the the store all the review will delete
+storeShema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    const ReviewRemove = await StoreReview.deleteMany({
+      _id: { $in: doc.reviews },
+    });
+  }
+});
+storeShema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    const ProductRemove = await Product.deleteMany({
+      _id: { $in: doc.products },
+    });
+  }
+});
 
 module.exports = mongoose.model("store", storeShema);

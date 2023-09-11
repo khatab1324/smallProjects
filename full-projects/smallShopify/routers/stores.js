@@ -15,6 +15,7 @@ const {
   validateStore,
   validateProduct,
   validateReview,
+  isReviewAuthor,
 } = require("../validation");
 const products = require("../models/products");
 
@@ -134,7 +135,7 @@ router.post(
   "/store/:storeId/reviews",
   isLoggedIn,
   validateReview,
-  async (req, res) => {
+  catchAsync(async (req, res) => {
     const { storeId } = req.params;
     console.log(req.body);
     const store = await Stors.findById(storeId);
@@ -145,6 +146,19 @@ router.post(
     store.save();
     console.log(req.user);
     res.redirect(`/store/${storeId}/`);
-  }
+  })
+);
+router.delete(
+  "/store/:storeId/reviews/:reviewId",
+  isLoggedIn,
+  isReviewAuthor,
+  catchAsync(async (req, res) => {
+    const { storeId, reviewId } = req.params;
+    const deleteReview = await StoreReviews.findByIdAndDelete(reviewId);
+    const deleteReviewFromStore = await Stors.findByIdAndUpdate(storeId, {
+      $pull: { reviews: reviewId },
+    });
+    res.redirect(`/store/${storeId}`);
+  })
 );
 module.exports = router;

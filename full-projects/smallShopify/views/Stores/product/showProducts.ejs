@@ -83,8 +83,8 @@
                   </form>
                   <form
                     class="d-flex flex-column mt-2"
-                    action="/store/<%= store.id %>/<%= product.id%>/delete"
-                    method="post"
+                    action="/store/<%= store.id %>/products/<%= product.id%>?_method=DELETE"
+                    method="POST"
                   >
                     <button class="btn btn-outline-danger btn-sm">
                       delete
