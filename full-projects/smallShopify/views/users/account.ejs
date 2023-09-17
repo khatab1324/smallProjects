@@ -10,7 +10,26 @@
     .custom-input:focus {
         border-color: #007bff; /* Change the border color on focus */
         box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a shadow on focus */
+    
     }
+    .modal1  {
+        display: none;
+        /* Add other styling as needed */
+        position: fixed; /* Fixes the modal position */
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Center the modal */
+        z-index: 9999; /* Set a high z-index to ensure it's above other content */
+        border-radius: 2%;
+      }
+     .modal-content{
+      padding: 10px;
+      border-radius: 2%;
+      background-color: #252331;
+
+    }
+    
+     
 </style>
 <section style="background-color: #eee">
   <div class="container py-5">
@@ -100,7 +119,7 @@
               <div class="col-sm-9">
                 <p class="text-muted mb-0">
                   <% if(user.phoneNumber){ %>
-                    <p class="text-muted mb-0""><%= user.phoneNumber %></p>
+                    <p class="text-muted mb-0"><%= user.phoneNumber %></p>
                   <%}else{%>
                     
                     
@@ -127,14 +146,20 @@
             <hr />
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0"></p>
+                <p class="mb-0">card info</p>
               </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
+              <div class="col-sm-7">
+                <p class="text-muted mb-0">xxxx xxxx xxxx 4784</p>
+                
+              </div>
+              <div class="col-sm-2">
+                <p class="mb-0"><a href="/card/info" class="text-primary " style="text-decoration: none;">more info</a></p>
               </div>
             </div>
           </div>
         </div>
+        <!--  -->
+        <% if(store){ %>
         <div class="row">
           <div class="col-md-6">
             <div class="card mb-4 mb-md-0">
@@ -146,14 +171,14 @@
                
                 <div>
                     <div>
-                        <p class="text-muted">number of product</p>
+                        <p class="text-muted">title : <%= store.title %></p>
 
                         <p class="text-muted"><hr/></p>  
                     </div>
                 </div>
                 <div>
                     <div>
-                        <p class="text-muted">number of product</p>
+                        <p class="text-muted">location : <%= store.location %></p>
 
                         <p class="text-muted"><hr/></p>  
                     </div>
@@ -161,7 +186,11 @@
                 
                 <div>
                     <div>
-                        <p class="text-muted">number of product</p>
+                        <p class="text-muted">rating : <%if(rating<=0){ %>
+                          <p>none</p>
+                        <% }else { %>
+                          <%=rating%>
+                         <%}%></p>
 
                         <p class="text-muted"><hr/></p>  
                     </div>
@@ -169,14 +198,20 @@
                 
                 <div>
                     <div>
-                        <p class="text-muted">number of product</p>
+                        <p class="text-muted">number of products : <%= numberProduct %></p>
 
                         <p class="text-muted"><hr/></p>  
                     </div>
                 </div>
+               <div class="row ms-4">
+                <div class="col-6">
                 <form action="/store/<%= store.id %>" method="get">
                     <button  class="subscribe btn btn-dark btn-block shadow-sm">show store </button>
                 </form>
+              </div>
+            <div class="col-6">
+                  <button id="loginButton"  class="subscribe btn btn-danger btn-block shadow-sm">delete store </button>            </div>
+            </div>
               </div>
             </div>
           </div>
@@ -215,15 +250,85 @@
                         <p class="text-muted"><hr/></p>  
                     </div>
                 </div>
-                <form action="/store/<%= store.id %>/showProducts" method="get">
-                    <button  class="subscribe btn btn-dark btn-block shadow-sm">show products </button>
+                <div class="col-12 ">
+                <form action="/store/<%= store.id %>/showProducts" method="get" class="" >
+                    <button  class="subscribe btn btn-dark btn-block shadow-sm ">show products </button>
                 </form>
+              </div>
               </div>
             </div>
           </div>
         </div>
+        <% }else{ %>
+          <form action="/create-store" method="get">
+            <button  class="subscribe btn btn-dark btn-block shadow-sm w-100">add store </button>
+        </form>
+          <% } %>
       </div>
     </div>
   </div>
   <%- include("../partials/footer") %>
 </section>
+
+    <!-- conferm delete Form Modal -->
+    <div id="loginModal" class="modal1">
+      <div class="modal-content ">
+        <span class="close d-flex text-white" id="closeModal"><h3>&times;</h3></span>
+        <h2 class="d-flex justify-content-center text-white">confirm delete store</h2>
+        <p class="display-6 blockquote-footer mt-4 text-white">are you sure for delete this store with title <i class="text-danger"><%= store.title %></i> 
+        if you remove this store , it will never be back
+        </p>
+        <p class="display-6 blockquote-footer mt-4 text-white"> <i class="text-danger"><%= store.title %></i> 
+          if you remove this store , all user that use this store will delete form them
+          </p>
+          <p class="display-6 blockquote-footer mt-4 text-white"> <i class="text-danger"><%= store.title %></i> 
+            if you remove this store , all product will delete
+            </p>
+              <div class="d-flex justify-content-center">
+                <!--fix the buttom , the buttom enter on input when the screen minmized  -->
+        <form id="loginForm" action="/store/<%= store.id %>?_method=DELETE" method="post" >
+          <label for="password" class="text-white pt-3">Password:</label>
+          <div class=" row pb-3">
+          <div class="col-sm-8 ">
+            <input type="text" id="username" name="usernaem" value="<%= user.username %>" required hidden/>
+              <input type="password" id="password" name="password" required />
+          </div>
+          <div class="col-sm-4 d-flex justify-content-center  ">  
+              <button  class="subscribe btn btn-danger btn-block shadow-sm d-flex justify-content-center">delete store </button>
+          </div>
+        </div>
+              </form>
+      </div>
+      </div>
+    </div>
+
+    <!-- Your page content continues here -->
+
+    <!-- JavaScript to show/hide the modal -->
+    <script>
+      // Get the modal
+      var modal = document.getElementById("loginModal");
+
+      // Get the button that opens the modal
+      var loginButton = document.getElementById("loginButton");
+
+      // Get the <span> element that closes the modal
+      var closeModal = document.getElementById("closeModal");
+
+      // When the user clicks the login button, open the modal
+      loginButton.onclick = function () {
+        modal.style.display = "block";
+      };
+
+      // When the user clicks on <span> (x), close the modal
+      closeModal.onclick = function () {
+        modal.style.display = "none";
+      };
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>

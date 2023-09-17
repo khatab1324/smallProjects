@@ -6,9 +6,11 @@ const Product = require("./products");
 
 const storeShema = new Schema(
   {
-    username: String,
-    email: String,
-    author: String,
+    
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     images: [
       {
         url: String,

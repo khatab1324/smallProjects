@@ -108,7 +108,7 @@ router.get(
       user = await users.findOne({ username: author });
     }
     req.flash("success", "Successfully made a new campground!");
-    res.render("Stores/createStore", { author, user });
+    res.render("Stores/createStore", { author });
   })
 );
 router.post(
@@ -123,9 +123,12 @@ router.post(
       filename: f.filename,
     }));
     store.author = req.user._id;
+    console.log(store.username);
     console.log(store);
     await users.findByIdAndUpdate(req.user.id, { store: store._id });
     await store.save();
+    const findStore = await Stors.findById(store._id).populate("author");
+    console.log(findStore);
     res.redirect("/stores");
   }
 );
@@ -152,6 +155,7 @@ router.delete(
   "/store/:storeId/reviews/:reviewId",
   isLoggedIn,
   isReviewAuthor,
+
   catchAsync(async (req, res) => {
     const { storeId, reviewId } = req.params;
     const deleteReview = await StoreReviews.findByIdAndDelete(reviewId);

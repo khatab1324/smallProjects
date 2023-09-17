@@ -5,24 +5,28 @@ const multer = require("multer");
 const passport = require("passport");
 const { storage } = require("../cloudinary");
 const catchAsync = require("../utile/catchAsync");
+const { storeReturnTo } = require("../validation");
 const upload = multer({ storage });
 
-router.get("/sign-in-user", catchAsync((req, res) => {
-  res.render("users/loginUser");
-}));
+router.get(
+  "/sign-in-user",
+  catchAsync(async (req, res) => {
+    res.render("users/loginUser");
+  })
+);
 router.post(
   "/sign-in",
   //here will use storeReturnTo
+  storeReturnTo,
   passport.authenticate("local", {
     failureFlash: true,
     failureRedirect: "/sign-in-user",
   }),
-  catchAsync((req, res) => {
+  catchAsync(async (req, res) => {
     req.flash("success", "welcome back!");
 
     console.log(req.session.returnTo);
     const redirectUrl = res.locals.returnTo || "/stores";
-
     res.redirect(redirectUrl);
   })
 );
@@ -64,7 +68,7 @@ router.post(
 );
 router.get(
   "/sign-out",
-  catchAsync((req, res) => {
+  catchAsync(async (req, res) => {
     req.logout(function (err) {
       //logout its come with passport
       if (err) {
