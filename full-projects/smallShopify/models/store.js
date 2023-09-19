@@ -6,7 +6,6 @@ const Product = require("./products");
 
 const storeShema = new Schema(
   {
-    
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -32,7 +31,9 @@ const storeShema = new Schema(
         ref: "StoreReview",
       },
     ],
+    pin: String,
   },
+
   opts
 );
 

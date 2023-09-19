@@ -9,7 +9,7 @@ const User = require("../models/users");
 const StoreReviews = require("../models/StoreReviews");
 const catchAsync = require("../utile/catchAsync");
 const passport = require("passport");
-const { isLoggedIn, isAuthor } = require("../validation");
+const { isLoggedIn, isAuthor, correctPin } = require("../validation");
 router.get(
   "/account",
   isLoggedIn,
@@ -23,18 +23,19 @@ router.get(
           path: "author",
         },
       });
-    console.log(store);
     let rating = 0;
-    let count = 0;
-    store.StoreReviews.map((e) => {
-      rating += e.rating;
-      count++;
-    });
-    rating = rating / count;
     let numberProduct = 0;
-    store.products.map((p) => {
-      numberProduct++;
-    });
+    if (store) {
+      let count = 0;
+      store.StoreReviews.map((e) => {
+        rating += e.rating;
+        count++;
+      });
+      rating = rating / count;
+      store.products.map((p) => {
+        numberProduct++;
+      });
+    }
     res.render("users/account", { user, store, rating, numberProduct });
   })
 );
@@ -51,9 +52,21 @@ router.delete(
   "/store/:id",
   isLoggedIn,
   isAuthor,
+  correctPin,
   catchAsync(async (req, res) => {
-    console.log("here the test for arraivd");
-    res.send("do you realy wnat to delete this store");
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    const storeId = user.store;
+    console.log(userId);
+    const deleteStoreFromUser = await User.findByIdAndUpdate(
+      userId,
+      //
+
+      { $unset: { store: 1 } },
+      { new: true }
+    );
+    const store = await Stors.findByIdAndDelete(storeId);
+    res.redirect("/stores");
   })
 );
 

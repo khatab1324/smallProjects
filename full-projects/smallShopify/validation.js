@@ -3,7 +3,10 @@ const { productSchema } = require("./schemaValidaion");
 const ExpressError = require("./utile/ExpressError");
 const Store = require("./models/store");
 const StoreReviews = require("./models/StoreReviews");
-
+const users = require("./models/users");
+const crypto = require("crypto");
+const util = require("util");
+const scrypt = util.promisify(crypto.scrypt);
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
@@ -13,14 +16,14 @@ module.exports.isLoggedIn = (req, res, next) => {
   next();
 };
 
-module.exports.storeReturnTo = (req, res, next) => {
+module.exports.storeReturnTo = async (req, res, next) => {
   if (req.session.returnTo) {
     res.locals.returnTo = req.session.returnTo;
   }
   next();
 };
 
-module.exports.validateStore = (req, res, next) => {
+module.exports.validateStore = async (req, res, next) => {
   const { error } = storeSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
@@ -47,7 +50,7 @@ module.exports.isReviewAuthor = async (req, res, next) => {
   }
   next();
 };
-module.exports.validateProduct = (req, res, next) => {
+module.exports.validateProduct = async (req, res, next) => {
   const { error } = productSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
@@ -56,7 +59,7 @@ module.exports.validateProduct = (req, res, next) => {
     next();
   }
 };
-module.exports.validateReview = (req, res, next) => {
+module.exports.validateReview = async (req, res, next) => {
   const { error } = reviewSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
@@ -64,4 +67,26 @@ module.exports.validateReview = (req, res, next) => {
   } else {
     next();
   }
+};
+module.exports.correctPin = async (req, res, next) => {
+  // fix the return to when the user enter wrong pin redirect him where he was
+  req.session.returnTo = req.originalUrl;
+  if (req.session.returnTo) {
+    res.locals.returnTo = req.session.returnTo;
+  }
+  const redirectUrl = res.locals.returnTo || "/stores";
+
+  const { pin } = req.body;
+  const userId = req.user._id;
+  const user = await users.findById(userId);
+  const storeId = user.store;
+  const store = await Store.findById(storeId);
+  const savedPin = store.pin;
+  const [hashed, salt] = savedPin.split(".");
+  const hashedSuppliedBuf = await scrypt(pin, salt, 64);
+  if (!(hashed === hashedSuppliedBuf.toString("hex"))) {
+    req.flash("error", "sorry your pin wrong!");
+    return res.redirect(redirectUrl);
+  }
+  next();
 };

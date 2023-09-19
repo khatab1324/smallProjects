@@ -50,9 +50,15 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Features</a>
         </li>
+        <% if(!store){ %>
         <li class="nav-item">
           <a class="nav-link" href="/create-store">create store</a>
         </li>
+        <% }else{ %>
+        <li class="nav-item">
+          <a class="nav-link" href="/store/<%=store%>">show store</a>
+        </li>
+         <% } %>
         <% if(username){ %>
         <li class="nav-item dropdown">
           <a

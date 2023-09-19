@@ -28,6 +28,35 @@
         .bold {
             font-weight: bold
         }
+        .custom-input {
+        
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    /* Change border color and add a shadow on focus */
+    .custom-input:focus {
+        border-color: #007bff; /* Change the border color on focus */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a shadow on focus */
+    
+    }
+    .modal1  {
+        display: none;
+        /* Add other styling as needed */
+        position: fixed; /* Fixes the modal position */
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Center the modal */
+        z-index: 9999; /* Set a high z-index to ensure it's above other content */
+        border-radius: 2%;
+      }
+     .modal-content{
+      padding: 10px;
+      border-radius: 2%;
+      background-color: #252331;
+
+    }
+    
+     
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -80,7 +109,7 @@
                                    <div class="col-sm-6">
                                     <div class="form-group mb-3"> <label>
                                             <h6>made by </h6>
-                                        </label> <input type="text" name="username" required class="form-control"value="<%= store.username %>" > </div>
+                                        </label> <input type="text" name="username" required class="form-control"value="<%= store.author.username %>" > </div>
                                 </div>
                             </div>
                                    <div class="form-group"> <label for="description ">
@@ -100,7 +129,31 @@
                                     </div>
                                     
                                 </div>
-                                <div class="card-footer"> <button class="subscribe btn btn-dark btn-block shadow-sm">Update Store </button>
+                                <div class="card-footer"> <button id="loginButton" class="subscribe btn btn-dark btn-block shadow-sm">Update Store </button>
+                                    <div id="loginModal" class="modal1">
+                                        <div class="modal-content " style="background-color: #252331;">
+                                          <span class="close d-flex text-white" id="closeModal"><h3>&times;</h3></span>
+                                          <h2 class="d-flex justify-content-center text-white">confirm delete store</h2>
+                                          <p class="display-6 blockquote-footer mt-4 text-white">are you sure for update this store with title <i class="text-danger"><%= store.title %></i> 
+                                          if you remove this store , all the info above will be ubdated
+                                          </p>
+                                         
+                                                <div class="d-flex justify-content-center">
+                                                  <!--fix the buttom , the buttom enter on input when the screen minmized  -->
+                                          <form id="loginForm" action="/store/<%= store.id %>?_method=DELETE" method="post" >
+                                            <label for="password" class="text-white ">Password:</label>
+                                            <div class=" row pb-3">
+                                            <div class="col-8 ">
+                                                <input type="password" id="pin" name="pin"  required />
+                                            </div>
+                                            <div class="col-sm-4 d-flex justify-content-center  ">  
+                                                <button  class="subscribe btn btn-danger btn-block shadow-sm d-flex justify-content-center">update store </button>
+                                            </div>
+                                          </div>
+                                         </form>
+                                        </div>
+                                        </div>
+                                      </div>
                             </form>
                         </div>
                     </div> <!-- End -->
@@ -156,6 +209,39 @@
         </div>
     </div>
 </div>
+<% if(store){ %>
+
+    <!-- Your page content continues here -->
+
+    <!-- JavaScript to show/hide the modal -->
+    <script>
+      // Get the modal
+      var modal = document.getElementById("loginModal");
+
+      // Get the button that opens the modal
+      var loginButton = document.getElementById("loginButton");
+
+      // Get the <span> element that closes the modal
+      var closeModal = document.getElementById("closeModal");
+
+      // When the user clicks the login button, open the modal
+      loginButton.onclick = function () {
+        modal.style.display = "block";
+      };
+
+      // When the user clicks on <span> (x), close the modal
+      closeModal.onclick = function () {
+        modal.style.display = "none";
+      };
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+<% } %>
 <script>
     $(function() {
         $('[data-toggle="tooltip"]').tooltip()

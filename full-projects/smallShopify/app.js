@@ -26,6 +26,8 @@ const storeRouter = require("./routers/stores");
 const authenticateRouter = require("./routers/authantication");
 const controleRouter = require("./routers/controleStore");
 const accountRouter = require("./routers/account");
+const productRouter = require("./routers/product");
+const reviewRouter = require("./routers/review");
 
 mongoose.set("strictQuery", false); //DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7. Use `mongoose.set('strictQuery', false);` if you want to prepare for this change. Or use `mongoose.set('strictQuery', true);` to suppress this warning.
 mongoose
@@ -97,7 +99,8 @@ app.use(authenticateRouter);
 app.use(storeRouter);
 app.use(controleRouter);
 app.use(accountRouter);
-
+app.use(productRouter);
+app.use(reviewRouter);
 app.get("/", (req, res) => {
   res.render("home");
 });

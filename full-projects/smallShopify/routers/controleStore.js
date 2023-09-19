@@ -13,6 +13,7 @@ const {
   isAuthor,
   validateStore,
   validateProduct,
+  correctPin,
 } = require("../validation");
 const products = require("../models/products");
 
@@ -20,7 +21,9 @@ router.get(
   "/stores/:storeId/controle",
   catchAsync(async (req, res) => {
     const { storeId } = req.params;
-    const store = await Stors.findById(storeId).populate("products");
+    const store = await Stors.findById(storeId).populate("author");
+
+    console.log(store.author);
 
     let capital = 0;
     for (let product of store.products) {
@@ -31,16 +34,17 @@ router.get(
 );
 router.post(
   "/store/:storeId",
+  isLoggedIn,
+  correctPin,
   catchAsync(async (req, res) => {
+    const { title, description, location } = req.body;
     const { storeId } = req.params;
     const store = await Stors.findById(storeId);
     const updatestore = await Stors.findByIdAndUpdate(storeId, {
-      ...req.body,
+      title,
+      description,
+      location,
     });
-
-    console.log(updatestore);
-    console.log(store);
-    console.log(req.body);
     store.save();
     res.redirect(`/store/${storeId}`);
   })
