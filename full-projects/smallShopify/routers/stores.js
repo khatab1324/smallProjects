@@ -53,6 +53,13 @@ router.get(
           path: "author",
         },
       });
+    let increseviews = store.views;
+
+    increseviews++;
+    const increViews = await Stors.findByIdAndUpdate(id, {
+      views: increseviews,
+    });
+
     console.log(store);
     res.render("Stores/showStore", { store });
   })
@@ -93,6 +100,15 @@ router.post(
         filename: f.filename,
       }));
       store.author = req.user._id;
+      store.views = 0;
+      // date
+      const date = new Date();
+      let currentDay = String(date.getDate()).padStart(2, "0");
+      let currentMonth = String(date.getMonth() + 1).padStart(2, "0");
+      let currentYear = date.getFullYear();
+      let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
+      store.dateCreate = currentDate;
+
       const salt = crypto.randomBytes(8).toString("hex");
       const buf = await scrypt(store.pin, salt, 64);
       store.pin = `${buf.toString("hex")}.${salt}`;

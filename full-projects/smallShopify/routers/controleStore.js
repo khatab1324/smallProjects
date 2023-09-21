@@ -33,50 +33,24 @@ router.get(
   })
 );
 router.post(
-  "/store/:storeId",
+  "/store/:id",
   isLoggedIn,
+  isAuthor,
   correctPin,
   catchAsync(async (req, res) => {
     const { title, description, location } = req.body;
-    const { storeId } = req.params;
-    const store = await Stors.findById(storeId);
-    const updatestore = await Stors.findByIdAndUpdate(storeId, {
+    const { id } = req.params;
+    const store = await Stors.findById(id);
+    const updatestore = await Stors.findByIdAndUpdate(id, {
       title,
       description,
       location,
     });
     store.save();
-    res.redirect(`/store/${storeId}`);
+    res.redirect(`/store/${id}`);
   })
 );
 
-// ============show products=========
-router.get(
-  "/store/:storeId/showProducts",
-  catchAsync(async (req, res) => {
-    const { storeId } = req.params;
-    const store = await Stors.findById(storeId).populate("products");
-    // const product= sotre.id.populate()
-    console.log(store);
-    const products = store.products;
-    res.render("Stores/product/showProducts", { store, products });
-  })
-);
-// ============delete product
-router.delete(
-  "/store/:storeId/products/:productId",
-  catchAsync(async (req, res) => {
-    const { storeId, productId } = req.params;
-
-    await Stors.findByIdAndUpdate(storeId, {
-      $pull: { products: productId },
-    });
-    await Product.findByIdAndDelete(productId);
-    console.log("the product deleted");
-    req.flash("success", "Successfully deleted campground");
-    res.redirect(`/store/${storeId}/showProducts`);
-  })
-);
 router.post(
   "/store/:storeId/delete",
   catchAsync(async (req, res) => {

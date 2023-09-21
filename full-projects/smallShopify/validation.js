@@ -2,10 +2,12 @@ const { storeSchema, reviewSchema } = require("./schemaValidaion");
 const { productSchema } = require("./schemaValidaion");
 const ExpressError = require("./utile/ExpressError");
 const Store = require("./models/store");
+const Product = require("./models/products");
 const StoreReviews = require("./models/StoreReviews");
 const users = require("./models/users");
 const crypto = require("crypto");
 const util = require("util");
+const { log } = require("console");
 const scrypt = util.promisify(crypto.scrypt);
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
@@ -34,8 +36,17 @@ module.exports.validateStore = async (req, res, next) => {
 };
 module.exports.isAuthor = async (req, res, next) => {
   const { id } = req.params;
-  const store = await Store.findById(id);
-  if (!store.author === req.user._id) {
+  console.log(id);
+  const product = await Product.findById(id);
+  let store;
+  if (product) {
+    store = await Store.findById(product.store);
+    console.log(store);
+  } else {
+    store = await Store.findById(id);
+    console.log(store);
+  }
+  if (!store.author.equals(req.user._id)) {
     req.flash("error", "You do not have permission to do that!");
     return res.redirect(`/store/${id}`);
   }

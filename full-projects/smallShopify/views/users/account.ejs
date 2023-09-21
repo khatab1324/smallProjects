@@ -202,7 +202,20 @@
 
                         <p class="text-muted"><hr/></p>  
                     </div>
+                </div><div>
+                  <div>
+                      <p class="text-muted">date create: <%= store.dateCreate %></p>
+
+                      <p class="text-muted"><hr/></p>  
+                  </div>
+                  <div>
+                    <div>
+                        <p class="text-muted">views : <%= store.views %></p>
+
+                        <p class="text-muted"><hr/></p>  
+                    </div>
                 </div>
+              </div>
                <div class="row ms-4">
                 <div class="col-6">
                 <form action="/store/<%= store.id %>" method="get">

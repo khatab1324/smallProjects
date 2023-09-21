@@ -41,7 +41,6 @@ router.delete(
   "/store/:storeId/reviews/:reviewId",
   isLoggedIn,
   isReviewAuthor,
-
   catchAsync(async (req, res) => {
     const { storeId, reviewId } = req.params;
     const deleteReview = await StoreReviews.findByIdAndDelete(reviewId);

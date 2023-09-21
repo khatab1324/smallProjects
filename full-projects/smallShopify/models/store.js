@@ -32,6 +32,8 @@ const storeShema = new Schema(
       },
     ],
     pin: String,
+    dateCreate: String,
+    views: Number,
   },
 
   opts

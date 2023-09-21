@@ -43,9 +43,7 @@ router.post(
       filename: f.filename,
     }));
     store.products.push(product);
-    product.store = store.title;
-    console.log(store);
-    console.log(product);
+    product.store = store._id;
     await store.save();
     await product.save();
     res.redirect(`/store/${id}`);
@@ -57,8 +55,62 @@ router.get(
     // I am try to make the url /store/:storeId/:productId but it doesnot work
     const { productId } = req.params;
     const product = await Product.findById(productId);
-    console.log(product);
     res.render("Stores/product/showProduct", { product });
+  })
+);
+router.get(
+  "/store/product/:productId/edit",
+  catchAsync(async (req, res) => {
+    // I am try to make the url /store/:storeId/:productId but it doesnot work
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
+    res.render("Stores/product/editProduct", { product });
+  })
+);
+
+router.post(
+  "/store/product/:id/edit",
+  isLoggedIn,
+  isAuthor,
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const { title, description, quantity, price } = req.body;
+    const product = await Product.findByIdAndUpdate(id, {
+      title,
+      description,
+      quantity,
+      price,
+    });
+    console.log(product);
+
+    console.log("*************************************");
+    res.redirect(`/store/${product.store}/showProducts`);
+  })
+);
+// ============show products=========
+router.get(
+  "/store/:storeId/showProducts",
+  catchAsync(async (req, res) => {
+    const { storeId } = req.params;
+    const store = await Stors.findById(storeId).populate("products");
+    // const product= sotre.id.populate()
+    console.log(store);
+    const products = store.products;
+    res.render("Stores/product/showProducts", { store, products });
+  })
+);
+router.delete(
+  "/store/:storeId/products/:productId",
+  catchAsync(async (req, res) => {
+    const { storeId, productId } = req.params;
+
+    await Stors.findByIdAndUpdate(storeId, {
+      $pull: { products: productId },
+    });
+    await Product.findByIdAndDelete(productId);
+    console.log("the product deleted");
+    req.flash("success", "Successfully deleted campground");
+    res.redirect(`/store/${storeId}/showProducts`);
   })
 );
 
