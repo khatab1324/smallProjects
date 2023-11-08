@@ -53,21 +53,16 @@
       <ul class="list-group list-group-flush">
         <li class="list-group-item text-muted"><%= product.location%></li>
         <li class="list-group-item">
-          Submited by : <%= product.store%>
+        <a class="card-link btn btn-info" href="/store/<%= product.store %>">see the store</a> 
         </li>
       </ul>
       <%// if( currentUser && store.author.equals(currentUser._id)) {%><!-- this is mean if the currnetUser exsist and store.author equail to currentUser._id show this button -->
       <div class="card-body">
-        <a class="card-link btn btn-info" href="/stores/<%=product._id%>/edit"
-          >Edit</a
-        >
-        <form
-          class="d-inline"
-          action="/stores/<%=product._id%>?_method=DELETE"
-          method="POST"
-        >
-          <button class="btn btn-danger">Delete</button>
+        <form action="/wishlist/<%= product.id %>" method="POST">
+          <button class="card-link btn btn-info" id="<%= product.id %>"onClick="reply_click(this.id)">add to wishlist</button>          
         </form>
+        
+      
       </div>
       <% //} %>
       <div class="card-footer text-muted">2 days ago</div>
@@ -121,4 +116,4 @@
       </div>
       <button class="btn btn-success">Submit</button>
   </div>
-</div>
+</div>   

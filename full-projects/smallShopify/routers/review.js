@@ -26,14 +26,12 @@ router.post(
   validateReview,
   catchAsync(async (req, res) => {
     const { storeId } = req.params;
-    console.log(req.body);
     const store = await Stors.findById(storeId);
     const storeReview = new StoreReviews(req.body.review);
     store.StoreReviews.push(storeReview);
     storeReview.author = req.user._id;
     storeReview.save();
     store.save();
-    console.log(req.user);
     res.redirect(`/store/${storeId}/`);
   })
 );

@@ -59,8 +59,6 @@ router.get(
     const increViews = await Stors.findByIdAndUpdate(id, {
       views: increseviews,
     });
-
-    console.log(store);
     res.render("Stores/showStore", { store });
   })
 );
@@ -71,7 +69,6 @@ router.get(
   isLoggedIn,
   upload.array("images"),
   catchAsync(async (req, res) => {
-    console.log(req.session);
     let author;
     let user;
     if (req.session.passport) {
@@ -115,7 +112,6 @@ router.post(
       await users.findByIdAndUpdate(req.user.id, { store: store._id });
       await store.save();
       const findStore = await Stors.findById(store._id).populate("author");
-      console.log(findStore);
       res.redirect("/stores");
     }
   })

@@ -36,16 +36,8 @@ module.exports.validateStore = async (req, res, next) => {
 };
 module.exports.isAuthor = async (req, res, next) => {
   const { id } = req.params;
-  console.log(id);
-  const product = await Product.findById(id);
-  let store;
-  if (product) {
-    store = await Store.findById(product.store);
-    console.log(store);
-  } else {
-    store = await Store.findById(id);
-    console.log(store);
-  }
+  let store = await Store.findById(id);
+  console.log(store);
   if (!store.author.equals(req.user._id)) {
     req.flash("error", "You do not have permission to do that!");
     return res.redirect(`/store/${id}`);
@@ -56,6 +48,15 @@ module.exports.isReviewAuthor = async (req, res, next) => {
   const { storeId, reviewId } = req.params; //why I put campid? it should have the same name id that in reviews.js file the route delete
   const reveiw = await StoreReviews.findById(reviewId);
   if (!reveiw.author.equals(req.user._id)) {
+    req.flash("error", "You do not have permission to do that!");
+    return res.redirect(`/store/${storeId}`);
+  }
+  next();
+};
+module.exports.isProductAuthor = async (req, res, next) => {
+  const { storeId, productId } = req.params;
+  const store = await Store.findById(storeId);
+  if (!store.author.equals(req.user._id)) {
     req.flash("error", "You do not have permission to do that!");
     return res.redirect(`/store/${storeId}`);
   }

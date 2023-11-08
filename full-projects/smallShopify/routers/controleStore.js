@@ -23,7 +23,7 @@ router.get(
     const { storeId } = req.params;
     const store = await Stors.findById(storeId).populate("author");
 
-    console.log(store.author);
+    
 
     let capital = 0;
     for (let product of store.products) {

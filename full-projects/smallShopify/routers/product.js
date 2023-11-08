@@ -16,6 +16,7 @@ const {
   validateProduct,
   validateReview,
   isReviewAuthor,
+  isProductAuthor,
 } = require("../validation");
 const products = require("../models/products");
 
@@ -33,7 +34,7 @@ router.post(
   "/store/:id/create-product",
   isLoggedIn,
   upload.array("images"),
-  validateProduct,
+  catchAsync(validateProduct),
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = new Product(req.body);
@@ -81,9 +82,6 @@ router.post(
       quantity,
       price,
     });
-    console.log(product);
-
-    console.log("*************************************");
     res.redirect(`/store/${product.store}/showProducts`);
   })
 );
@@ -94,16 +92,16 @@ router.get(
     const { storeId } = req.params;
     const store = await Stors.findById(storeId).populate("products");
     // const product= sotre.id.populate()
-    console.log(store);
     const products = store.products;
     res.render("Stores/product/showProducts", { store, products });
   })
 );
 router.delete(
   "/store/:storeId/products/:productId",
+  isLoggedIn,
+  isProductAuthor,
   catchAsync(async (req, res) => {
     const { storeId, productId } = req.params;
-
     await Stors.findByIdAndUpdate(storeId, {
       $pull: { products: productId },
     });
