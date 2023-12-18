@@ -27,10 +27,13 @@ router.get(
     let wishList = await WishList.findOne({ user: userId }).populate(
       "products"
     );
-    console.log(wishList.products);
+
+    console.log("____________the products-_-");
+    console.log(wishList);
     res.render("users/wishlist", { wishList });
   })
 );
+// you should refact this code
 router.post(
   "/wishlist/:productId",
   isLoggedIn,
@@ -40,21 +43,63 @@ router.post(
     const product = await Product.findById(productId);
     const userId = req.user._id;
     const user = await users.findById(userId);
-    console.log(user);
     let wishList = await WishList.findOne({ user: userId }).populate(
       //  NOTE : find give you and array and findOne give you and object
       // you need the object
       "products"
     );
-    if (wishList.length === 0) {
+    // clean this code
+
+    if (!wishList) {
       wishList = new WishList();
       wishList.user = user;
       wishList.products = product;
       await wishList.save();
     } else {
-      wishList.products.push(product);
+      let productExist;
+      const isProductExist = () => {
+        wishList.products.filter((product) => {
+          productExist = product.id === productId;
+          if (productExist) {
+            productExist = product;
+            return product;
+          }
+        });
+      };
+      console.log("+++++++++the product++++++++++++");
+      console.log(product);
+      isProductExist();
+      console.log("+++++++++productExist++++++++++++");
+      console.log(productExist);
+      if (!productExist) {
+        wishList.products.push(product);
+      }
       await wishList.save();
     }
+    res.redirect("/wishlist");
+  })
+);
+router.delete(
+  "/wishlist/:productId",
+  catchAsync(async (req, res) => {
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
+    const userId = req.user._id;
+    const user = await users.findById(userId);
+    let wishList = await WishList.findOne({ user: userId }).populate(
+      "products"
+    );
+    let findProduct;
+    const productWantDelete = wishList.products.filter((product) => {
+      findProduct = product.id === productId;
+      if (findProduct) {
+        return product;
+      }
+    });
+    // this for product that I want to delete it from the wishList
+    await WishList.findByIdAndUpdate(wishList.id, {
+      $pull: { products: productWantDelete[0].id },
+    });
     res.redirect("/wishlist");
   })
 );

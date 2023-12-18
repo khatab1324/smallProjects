@@ -55,7 +55,6 @@
       background-color: #252331;
 
     }
-    
      
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -98,7 +97,10 @@
                         <!-- credit card info-->
                         <div id="store" class="tab-pane fade show active pt-3">
                             
-                            <form method="post" action="/store/<%= store.id %>" >
+                            <form  action="/store/<%= store.id %>"  method="POST"
+                                class="validated-form"
+                                enctype="multipart/form-data"
+                                novalidate>
                                 <div class="row">
                                 <div class="form-group col-sm-6"> 
                                     <label for="title">
@@ -129,7 +131,52 @@
                                     </div>
                                     
                                 </div>
-                                <div class="card-footer"> <button id="loginButton" class="subscribe btn btn-dark btn-block shadow-sm">Update Store </button>
+                                <div class="form-group"> <label for="images">
+                                    <h6> add images</h6>
+                                </label>
+                                <div class="input-group"> <input type="file" name="image" id="image" class="form-control "multiple></div>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                      var toggleButton = document.getElementById('toggleButton');
+                                      var imageToShow = document.getElementById('imageToShow');
+                                
+                                      toggleButton.addEventListener('click', function() {
+                                        if (imageToShow.style.display === 'none') {
+                                          imageToShow.style.display = 'block'; // Show the image
+                                        } else {
+                                          imageToShow.style.display = 'none'; // Hide the image
+                                        }
+                                      });
+                                    });
+                                  </script>
+                                <h6 id="toggleButton" class="mt-3 col-3 border" onclick="clickHandle()">delete image</h6>
+                                <div id="imageToShow" style=" display: none;">
+                                    <div class="row row-cols-1 row-cols-md-4 g-4 mb-3">
+                                 <% store.images.forEach((img, i) => { %>
+                                    
+                                    <div class="mb-3 mr-3">
+                                        <div class="card">
+                                          <img class="card-img" style="width: 120px;" src="<%= img.url %>" alt="" />
+                                          <div class="card-img-overlay text-end pt-1 pe-2">
+                                            <label class="visually-hidden mr-2"  for="image-<%= i %>"
+                                              ></label
+                                            >
+                                            <input
+                                              class="form-check-input"
+                                              type="checkbox"
+                                              name="deleteImages[]"
+                                              value="<%= img.filename %>"
+                                              id="image-<%= i %>"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    <% }) %>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                                <div class="card-footer"> <h1 id="loginButton" class="subscribe btn btn-dark btn-block shadow-sm">Update Store </h1>
                                     <div id="loginModal" class="modal1">
                                         <div class="modal-content " style="background-color: #252331;">
                                           <span class="close d-flex text-white" id="closeModal"><h3>&times;</h3></span>
@@ -140,7 +187,6 @@
                                          
                                                 <div class="d-flex justify-content-center">
                                                   <!--fix the buttom , the buttom enter on input when the screen minmized  -->
-                                          <form id="loginForm" action="/store/<%= store.id %>?_method=DELETE" method="post" >
                                             <label for="password" class="text-white ">Password:</label>
                                             <div class=" row pb-3">
                                             <div class="col-8 ">
@@ -150,7 +196,6 @@
                                                 <button  class="subscribe btn btn-danger btn-block shadow-sm d-flex justify-content-center">update store </button>
                                             </div>
                                           </div>
-                                         </form>
                                         </div>
                                         </div>
                                       </div>

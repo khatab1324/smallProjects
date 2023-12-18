@@ -57,7 +57,7 @@ router.delete(
     const userId = req.user._id;
     const user = await User.findById(userId);
     const storeId = user.store;
-    console.log(userId);
+   
     const deleteStoreFromUser = await User.findByIdAndUpdate(
       userId,
       //

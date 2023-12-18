@@ -25,7 +25,7 @@ router.post(
   catchAsync(async (req, res) => {
     req.flash("success", "welcome back!");
 
-    console.log(req.session.returnTo);
+   
     const redirectUrl = res.locals.returnTo || "/stores";
     res.redirect(redirectUrl);
   })
@@ -47,7 +47,7 @@ router.post(
         //I will remove it when I add validation
         const user = new User({ email, username });
         const newUser = await User.register(user, password);
-        console.log(newUser);
+        
         req.login(newUser, (err) => {
           if (err) {
             return next(err);
