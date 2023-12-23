@@ -72,7 +72,7 @@
       <form
         action="/store/<%=store._id%>/reviews"
         method="POST"
-        class="mb-3 validated-form"
+        class="mb-3 validated-form needs-validation"
         novalidate
       >
         <!-- <div class="mb-3">
@@ -88,6 +88,7 @@
             value="1"
             checked
             aria-label="No rating."
+            required
           />
           <input
             type="radio"
@@ -122,6 +123,7 @@
             id="first-rate5"
             name="review[rating]"
             value="5"
+            
           />
           <label for="first-rate5" title="Amazing">5 stars</label>
         </fieldset>
@@ -233,3 +235,24 @@
     </div>
   </div>
 </div>
+<script>
+  (function () {
+    'use strict'
+  
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+  
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+  
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>

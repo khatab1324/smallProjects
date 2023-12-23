@@ -24,7 +24,7 @@
                   <form
                     action="/store/<%= store.id %>/create-product"
                     method="post"
-                    class="validated-form"
+                    class="validated-form needs-validation"
                     enctype="multipart/form-data"
                     novalidate
                   >
@@ -36,6 +36,7 @@
                         name="title"
                         class="form-control"
                         placeholder="title"
+                        required
                       />
                       <div class="valid-feedback">Looks good!</div>
                     </div>
@@ -47,6 +48,7 @@
                         name="description"
                         placeholder="description"
                         class="form-control"
+                        required
                       />
                       <div class="valid-feedback">Looks good!</div>
                     </div>
@@ -58,6 +60,7 @@
                         name="quantity"
                         placeholder="quantity"
                         class="form-control"
+                        required
                       />
                       <div class="valid-feedback">Looks good!</div>
                     </div>
@@ -68,6 +71,7 @@
                         name="price"
                         placeholder="price"
                         class="form-control"
+                        required
                       />
                       <div class="valid-feedback">Looks good!</div>
                     </div>
@@ -110,5 +114,29 @@
         </div>
       </div>
     </section>
+    <script>
+      (function () {
+        "use strict";
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll(".needs-validation");
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach(function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
   </body>
 </html>

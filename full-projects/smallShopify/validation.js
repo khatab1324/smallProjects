@@ -5,6 +5,8 @@ const Store = require("./models/store");
 const Product = require("./models/products");
 const StoreReviews = require("./models/StoreReviews");
 const users = require("./models/users");
+const ProductReviews = require("./models/productReviews");
+
 const crypto = require("crypto");
 const util = require("util");
 const { log } = require("console");
@@ -34,7 +36,7 @@ module.exports.validateStore = async (req, res, next) => {
     next();
   }
 };
-module.exports.isAuthor = async (req, res, next) => {
+module.exports.isAuthorStore = async (req, res, next) => {
   const { id } = req.params;
   let store = await Store.findById(id);
   console.log(store);
@@ -44,12 +46,32 @@ module.exports.isAuthor = async (req, res, next) => {
   }
   next();
 };
+module.exports.isAuthorProduct = async (req, res, next) => {
+  const { id } = req.params;
+  let product = await Product.findById(id);
+  console.log(product);
+  let store = await Store.findById(product.store);
+  if (!store.author.equals(req.user._id)) {
+    req.flash("error", "You do not have permission to do that!");
+    return res.redirect(`/store/product/${id}`);
+  }
+  next();
+};
 module.exports.isReviewAuthor = async (req, res, next) => {
   const { storeId, reviewId } = req.params; //why I put campid? it should have the same name id that in reviews.js file the route delete
   const reveiw = await StoreReviews.findById(reviewId);
   if (!reveiw.author.equals(req.user._id)) {
     req.flash("error", "You do not have permission to do that!");
     return res.redirect(`/store/${storeId}`);
+  }
+  next();
+};
+module.exports.isReviewAuthorProduct = async (req, res, next) => {
+  const { productId, reviewId } = req.params; //why I put campid? it should have the same name id that in reviews.js file the route delete
+  const reveiw = await ProductReviews.findById(reviewId);
+  if (!reveiw.author.equals(req.user._id)) {
+    req.flash("error", "You do not have permission to do that!");
+    return res.redirect(`/store/product/${productId}`);
   }
   next();
 };
@@ -99,6 +121,15 @@ module.exports.correctPin = async (req, res, next) => {
   if (!(hashed === hashedSuppliedBuf.toString("hex"))) {
     req.flash("error", "sorry your pin wrong!");
     return res.redirect(redirectUrl);
+  }
+  next();
+};
+module.exports.isHaveStore = async (req, res, next) => {
+  const userId = req.user._id;
+  const user = await users.findById(userId);
+  if (user.store) {
+    req.flash("error", "sorry you have store");
+    return res.redirect("/stores");
   }
   next();
 };

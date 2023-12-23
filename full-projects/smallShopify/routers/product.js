@@ -11,12 +11,13 @@ const StoreReviews = require("../models/StoreReviews");
 const catchAsync = require("../utile/catchAsync");
 const {
   isLoggedIn,
-  isAuthor,
+  isAuthorStore,
   validateStore,
   validateProduct,
   validateReview,
   isReviewAuthor,
   isProductAuthor,
+  isAuthorProduct,
 } = require("../validation");
 const products = require("../models/products");
 
@@ -55,7 +56,13 @@ router.get(
   catchAsync(async (req, res) => {
     // I am try to make the url /store/:storeId/:productId but it doesnot work
     const { productId } = req.params;
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate({
+      path: "ProductReviews",
+      populate: {
+        path: "author",
+      },
+    });
+    console.log("product", product);
     res.render("Stores/product/showProduct", { product });
   })
 );
@@ -72,7 +79,7 @@ router.get(
 router.post(
   "/store/product/:id/edit",
   isLoggedIn,
-  isAuthor,
+  isAuthorProduct,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const { title, description, quantity, price } = req.body;
@@ -91,6 +98,7 @@ router.get(
   catchAsync(async (req, res) => {
     const { storeId } = req.params;
     const store = await Stors.findById(storeId).populate("products");
+
     // const product= sotre.id.populate()
     const products = store.products;
     res.render("Stores/product/showProducts", { store, products });
@@ -99,7 +107,7 @@ router.get(
 router.delete(
   "/store/:storeId/products/:productId",
   isLoggedIn,
-  isProductAuthor,
+  catchAsync(isProductAuthor),
   catchAsync(async (req, res) => {
     const { storeId, productId } = req.params;
     await Stors.findByIdAndUpdate(storeId, {

@@ -107,23 +107,10 @@
       <form
         action="/create-store"
         method="POST"
-        class="validated-form"
+        class="validated-form needs-validation"
         enctype="multipart/form-data"
         novalidate
       >
-        <div class="user-info">
-          <div class="input-group mb-3">
-            <input
-              class="form-control"
-              type="text"
-              name="author"
-              id="author"
-              value="6507369d79ee3c5811fc4d58"
-              placeholder="author"
-              hidden
-            />
-          </div>
-        </div>
         <div class="store-info">
           <h3>create your store</h3>
           <div class="input-group mb-3">
@@ -133,6 +120,7 @@
               name="title"
               id="title"
               placeholder="title"
+              required
             />
           </div>
           <div class="input-group mb-3">
@@ -142,6 +130,7 @@
               name="location"
               id="location"
               placeholder="enter your location if you have one"
+              required
             />
           </div>
           <div class="input-group mb-3">
@@ -151,6 +140,7 @@
               name="description"
               id="description"
               placeholder="description"
+              required
             />
           </div>
           <div class="mb-3">
@@ -210,6 +200,29 @@
       $(function () {
         $('[data-toggle="tooltip"]').tooltip();
       });
+
+      (function () {
+        "use strict";
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll(".needs-validation");
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach(function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
     </script>
   </body>
 </html>

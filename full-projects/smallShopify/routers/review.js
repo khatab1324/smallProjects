@@ -7,15 +7,15 @@ const Stors = require("../models/store");
 const Product = require("../models/products");
 const users = require("../models/users");
 const StoreReviews = require("../models/StoreReviews");
-
+const ProductReviews = require("../models/productReviews");
 const catchAsync = require("../utile/catchAsync");
 const {
   isLoggedIn,
-  isAuthor,
   validateStore,
   validateProduct,
   validateReview,
   isReviewAuthor,
+  isReviewAuthorProduct,
 } = require("../validation");
 const products = require("../models/products");
 
@@ -23,7 +23,7 @@ const products = require("../models/products");
 router.post(
   "/store/:storeId/reviews",
   isLoggedIn,
-  validateReview,
+  catchAsync(validateReview),
   catchAsync(async (req, res) => {
     const { storeId } = req.params;
     const store = await Stors.findById(storeId);
@@ -48,4 +48,36 @@ router.delete(
     res.redirect(`/store/${storeId}`);
   })
 );
+
+//============================ product =================
+router.post(
+  "/store/product/:productId/reviews",
+  isLoggedIn,
+  validateReview,
+  catchAsync(async (req, res) => {
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
+    const productReview = new ProductReviews(req.body.review);
+    console.log(product);
+    product.ProductReviews.push(productReview);
+    productReview.author = req.user._id;
+    productReview.save();
+    product.save();
+    res.redirect(`/store/product/${productId}/`);
+  })
+);
+router.delete(
+  "/store/product/:productId/reviews/:reviewId",
+  isLoggedIn,
+  isReviewAuthorProduct,
+  catchAsync(async (req, res) => {
+    const { productId, reviewId } = req.params;
+    const deleteReview = await ProductReviews.findByIdAndDelete(reviewId);
+    const deleteReviewFromStore = await Product.findByIdAndUpdate(productId, {
+      $pull: { reviews: reviewId },
+    });
+    res.redirect(`/store/product/${productId}`);
+  })
+);
+
 module.exports = router;

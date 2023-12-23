@@ -9,7 +9,7 @@ const User = require("../models/users");
 const StoreReviews = require("../models/StoreReviews");
 const catchAsync = require("../utile/catchAsync");
 const passport = require("passport");
-const { isLoggedIn, isAuthor, correctPin } = require("../validation");
+const { isLoggedIn, correctPin, isAuthorStore } = require("../validation");
 router.get(
   "/account",
   isLoggedIn,
@@ -51,13 +51,13 @@ router.post(
 router.delete(
   "/store/:id",
   isLoggedIn,
-  isAuthor,
+  isAuthorStore,
   correctPin,
   catchAsync(async (req, res) => {
     const userId = req.user._id;
     const user = await User.findById(userId);
     const storeId = user.store;
-   
+
     const deleteStoreFromUser = await User.findByIdAndUpdate(
       userId,
       //

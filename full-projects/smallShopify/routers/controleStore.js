@@ -11,10 +11,11 @@ const { cloudinary } = require("../cloudinary"); //there inside it dirctory that
 const catchAsync = require("../utile/catchAsync");
 const {
   isLoggedIn,
-  isAuthor,
+  
   validateStore,
   validateProduct,
   correctPin,
+  isAuthorStore,
 } = require("../validation");
 const products = require("../models/products");
 router.get(
@@ -33,7 +34,7 @@ router.get(
 router.post(
   "/store/:id",
   isLoggedIn,
-  isAuthor,
+  isAuthorStore,
   upload.array("image"),
   correctPin, //there is problem when send form have enctype="multipart/form-data" novalidate the pin will be undefined//ubdate the problem now unexpected
   catchAsync(async (req, res) => {

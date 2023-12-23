@@ -11,11 +11,11 @@ const StoreReviews = require("../models/StoreReviews");
 const catchAsync = require("../utile/catchAsync");
 const {
   isLoggedIn,
-  isAuthor,
   validateStore,
   validateProduct,
   validateReview,
   isReviewAuthor,
+  isHaveStore,
 } = require("../validation");
 const products = require("../models/products");
 
@@ -67,6 +67,7 @@ router.get(
 router.get(
   "/create-store",
   isLoggedIn,
+  isHaveStore,
   upload.array("images"),
   catchAsync(async (req, res) => {
     let author;
@@ -85,6 +86,7 @@ router.post(
   isLoggedIn,
   upload.array("images"),
   validateStore,
+  isHaveStore,
   catchAsync(async (req, res) => {
     const isStoreExist = await Stors.findOne({ author: req.user._id });
     if (isStoreExist) {
