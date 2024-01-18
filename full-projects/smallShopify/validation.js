@@ -1,4 +1,8 @@
-const { storeSchema, reviewSchema } = require("./schemaValidaion");
+const {
+  storeSchema,
+  storeUpdateSchema,
+  reviewSchema,
+} = require("./schemaValidaion");
 const { productSchema } = require("./schemaValidaion");
 const ExpressError = require("./utile/ExpressError");
 const Store = require("./models/store");
@@ -36,6 +40,16 @@ module.exports.validateStore = async (req, res, next) => {
     next();
   }
 };
+
+module.exports.validateStoreUpdate = async (req, res, next) => {
+  const { error } = storeUpdateSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
 module.exports.isAuthorStore = async (req, res, next) => {
   const { id } = req.params;
   let store = await Store.findById(id);
@@ -47,13 +61,13 @@ module.exports.isAuthorStore = async (req, res, next) => {
   next();
 };
 module.exports.isAuthorProduct = async (req, res, next) => {
-  const { id } = req.params;
-  let product = await Product.findById(id);
-  console.log(product);
+  const { productId } = req.params;
+  let product = await Product.findById(productId);
+  console.log(product,productId);
   let store = await Store.findById(product.store);
   if (!store.author.equals(req.user._id)) {
     req.flash("error", "You do not have permission to do that!");
-    return res.redirect(`/store/product/${id}`);
+    return res.redirect(`/store/product/${productId}`);
   }
   next();
 };
@@ -85,6 +99,16 @@ module.exports.isProductAuthor = async (req, res, next) => {
   next();
 };
 module.exports.validateProduct = async (req, res, next) => {
+  const { error } = productSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+module.exports.validateEditProduct = async (req, res, next) => {
+  console.log("req.body+++++++++++++++from validation", req.body);
   const { error } = productSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");

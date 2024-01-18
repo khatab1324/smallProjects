@@ -11,11 +11,11 @@ const { cloudinary } = require("../cloudinary"); //there inside it dirctory that
 const catchAsync = require("../utile/catchAsync");
 const {
   isLoggedIn,
-  
   validateStore,
   validateProduct,
   correctPin,
   isAuthorStore,
+  validateStoreUpdate,
 } = require("../validation");
 const products = require("../models/products");
 router.get(
@@ -31,11 +31,13 @@ router.get(
     res.render("Stores/controle", { store, capital });
   })
 );
+// update store
 router.post(
   "/store/:id",
   isLoggedIn,
   isAuthorStore,
   upload.array("image"),
+  catchAsync(validateStoreUpdate),
   correctPin, //there is problem when send form have enctype="multipart/form-data" novalidate the pin will be undefined//ubdate the problem now unexpected
   catchAsync(async (req, res) => {
     console.log("req body**********************", req.body);
@@ -47,7 +49,6 @@ router.post(
       description,
       location,
     });
-    console.log("#################### :", req.files);
     const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
     store.images.push(...imgs);
     store.save();

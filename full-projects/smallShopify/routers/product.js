@@ -7,7 +7,7 @@ const Stors = require("../models/store");
 const Product = require("../models/products");
 const users = require("../models/users");
 const StoreReviews = require("../models/StoreReviews");
-
+const { cloudinary } = require("../cloudinary"); //there inside it dirctory that distroy the imgs that in cloudinary
 const catchAsync = require("../utile/catchAsync");
 const {
   isLoggedIn,
@@ -18,11 +18,15 @@ const {
   isReviewAuthor,
   isProductAuthor,
   isAuthorProduct,
+  validateEditProduct,
 } = require("../validation");
 const products = require("../models/products");
 
+// ============send page create store=========
 router.get(
   "/store/:id/create-product",
+  isLoggedIn,
+  catchAsync(isAuthorStore),
   catchAsync(async (req, res) => {
     //show form create product
     const { id } = req.params;
@@ -31,11 +35,59 @@ router.get(
     res.render("Stores/product/createProduct", { store });
   })
 );
+
+// ============send page show product=========
+router.get(
+  "/store/product/:productId",
+  catchAsync(async (req, res) => {
+    // I am try to make the url /store/:storeId/:productId but it doesnot work
+    const { productId } = req.params;
+    const product = await Product.findById(productId).populate({
+      path: "ProductReviews",
+      populate: {
+        path: "author",
+      },
+    });
+
+    res.render("Stores/product/showProduct", { product });
+  })
+);
+
+// ============send page edit product=========
+router.get(
+  "/store/product/:productId/edit",
+  isLoggedIn,
+  catchAsync(isAuthorProduct),
+  catchAsync(async (req, res) => {
+    // I am try to make the url /store/:storeId/:productId but it doesnot work
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
+    res.render("Stores/product/editProduct", { product });
+  })
+);
+
+// ============show products=========
+router.get(
+  "/store/:id/showProducts",
+  isLoggedIn,
+  catchAsync(isAuthorStore),
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const store = await Stors.findById(id).populate("products");
+
+    // const product= sotre.id.populate()
+    const products = store.products;
+    res.render("Stores/product/showProducts", { store, products });
+  })
+);
+
+// ============create product=========
 router.post(
   "/store/:id/create-product",
   isLoggedIn,
+  catchAsync(isAuthorStore),
   upload.array("images"),
-  catchAsync(validateProduct),
+  catchAsync(validateProduct), //mybe this will cause problem if the req from postman//make it after upload.array like the edit product
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = new Product(req.body);
@@ -51,72 +103,55 @@ router.post(
     res.redirect(`/store/${id}`);
   })
 );
-router.get(
-  "/store/product/:productId",
-  catchAsync(async (req, res) => {
-    // I am try to make the url /store/:storeId/:productId but it doesnot work
-    const { productId } = req.params;
-    const product = await Product.findById(productId).populate({
-      path: "ProductReviews",
-      populate: {
-        path: "author",
-      },
-    });
-    console.log("product", product);
-    res.render("Stores/product/showProduct", { product });
-  })
-);
-router.get(
-  "/store/product/:productId/edit",
-  catchAsync(async (req, res) => {
-    // I am try to make the url /store/:storeId/:productId but it doesnot work
-    const { productId } = req.params;
-    const product = await Product.findById(productId);
-    res.render("Stores/product/editProduct", { product });
-  })
-);
 
+// ============edit product=========
 router.post(
-  "/store/product/:id/edit",
+  "/store/product/:productId/edit",
   isLoggedIn,
-  isAuthorProduct,
+  catchAsync(isAuthorProduct),
+  upload.array("images"),
+  catchAsync(validateProduct), //it is same validateProduct remove it
   catchAsync(async (req, res) => {
-    const { id } = req.params;
+    console.log("req.body+++++++++++++++", req.body);
+    const { productId } = req.params;
     const { title, description, quantity, price } = req.body;
-    const product = await Product.findByIdAndUpdate(id, {
+    const product = await Product.findByIdAndUpdate(productId, {
       title,
       description,
       quantity,
       price,
     });
+
+    const imageInDataBase = product.images;
+    const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+    console.log(imgs);
+    if (imgs.length > 0) {
+      product.images = [];
+      product.images.push(...imgs);
+      product.save();
+      // remove image from cloudinary
+      for (let image of imageInDataBase) {
+        await cloudinary.uploader.destroy(image.filename);
+      }
+    }
+
     res.redirect(`/store/${product.store}/showProducts`);
   })
 );
-// ============show products=========
-router.get(
-  "/store/:storeId/showProducts",
-  catchAsync(async (req, res) => {
-    const { storeId } = req.params;
-    const store = await Stors.findById(storeId).populate("products");
-
-    // const product= sotre.id.populate()
-    const products = store.products;
-    res.render("Stores/product/showProducts", { store, products });
-  })
-);
+// ============delete product=========
 router.delete(
-  "/store/:storeId/products/:productId",
+  "/store/:id/products/:productId",
   isLoggedIn,
-  catchAsync(isProductAuthor),
+  catchAsync(isAuthorStore),
   catchAsync(async (req, res) => {
-    const { storeId, productId } = req.params;
-    await Stors.findByIdAndUpdate(storeId, {
+    const { id, productId } = req.params;
+    await Stors.findByIdAndUpdate(id, {
       $pull: { products: productId },
     });
     await Product.findByIdAndDelete(productId);
     console.log("the product deleted");
-    req.flash("success", "Successfully deleted campground");
-    res.redirect(`/store/${storeId}/showProducts`);
+    req.flash("success", "Successfully deleted product");
+    res.redirect(`/store/${id}/showProducts`);
   })
 );
 

@@ -37,7 +37,7 @@ router.get(
       store = req.user.store;
     }
 
-    req.flash("success", "Successfully made a new campground!");
+    req.flash("success", "Successfully made a new store!");
     res.render("Stores/stores", { stores, username, store });
   })
 );
@@ -77,7 +77,7 @@ router.get(
       author = req.session.passport.user;
       user = await users.findOne({ username: author });
     }
-    req.flash("success", "Successfully made a new campground!");
+    req.flash("success", "Successfully made a new store!");
     res.render("Stores/createStore", { author });
   })
 );
@@ -85,8 +85,8 @@ router.post(
   "/create-store",
   isLoggedIn,
   upload.array("images"),
-  validateStore,
   isHaveStore,
+  catchAsync(validateStore),
   catchAsync(async (req, res) => {
     const isStoreExist = await Stors.findOne({ author: req.user._id });
     if (isStoreExist) {
