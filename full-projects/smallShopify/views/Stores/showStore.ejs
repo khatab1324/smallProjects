@@ -70,8 +70,8 @@
       
       <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner text-center">
-              <h1>products</h1>
-              <a href="/store/<%= store.id %>/create-product">add prouct</a>
+              <h1>your products</h1>
+              <a href="/store/<%= store.id %>/create-product">add member</a>
               
               <div class="d-flex">
       
@@ -97,7 +97,7 @@
                           <% } %>
                           <div class="card-body">
                             <h5 class="card-title"><%= product.title %></h5>
-                            <p class="card-text">description</p>
+                            <p class="card-text"><%= product.description %></p>
                             <a href="/store/product/<%= product.id %>" class="btn btn-primary"
                               >show product</a
                             >
