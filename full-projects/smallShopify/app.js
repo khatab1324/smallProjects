@@ -48,7 +48,8 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 // =========================session====================
-const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/myDatabase";
+//  process.env.DB_URL ||
+const dbUrl = "mongodb://localhost:27017/myDatabase";
 const storeSession = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,

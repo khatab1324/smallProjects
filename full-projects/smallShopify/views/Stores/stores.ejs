@@ -6,11 +6,7 @@
     <title>Document</title>
   </head>
   <body class="position-relative">
-    <%- include("../partials/navbar") %>
-    <!--  -->
-
-    <!--  -->
-    <% for (let storeData of stores){%>
+    <%- include("../partials/navbar") %> <% for (let storeData of stores){%>
     <div class="d-inline-block">
       <div class="card text-center" style="width: 18rem">
         <div class="carousel-inner">
@@ -44,6 +40,5 @@
       </div>
     </div>
     <% }%> <%- include("../partials/footer") %>
-    
   </body>
 </html>
