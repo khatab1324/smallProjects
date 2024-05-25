@@ -41,11 +41,55 @@ router.get(
 );
 router.post(
   "/account/addPhoneNumber",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const { phoneNumber } = req.body;
     const user = await User.findByIdAndUpdate(req.user._id, { phoneNumber });
 
     res.redirect("/account");
+  })
+);
+router.post(
+  "/account/addUserAccount",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const {
+      websiteurl,
+      githubAccount,
+      twitterAccount,
+      instagramAccount,
+      facebookAccount,
+    } = req.body;
+    const userId = req.user._id;
+    try {
+      let user = await User.findById(userId);
+
+      if (websiteurl) {
+        user.websiteurl = websiteurl;
+      }
+
+      if (githubAccount) {
+        user.githubAccount = githubAccount;
+      }
+
+      if (twitterAccount) {
+        user.twitterAccount = twitterAccount;
+      }
+
+      if (instagramAccount) {
+        user.instagramAccount = instagramAccount;
+      }
+
+      if (facebookAccount) {
+        user.facebookAccount = facebookAccount;
+      }
+      await user.save();
+
+      res.redirect("/account");
+    } catch (err) {
+      console.error(err);
+      res.redirect("/account");
+    }
   })
 );
 router.delete(

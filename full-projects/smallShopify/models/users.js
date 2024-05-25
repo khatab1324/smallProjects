@@ -9,6 +9,11 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  websiteurl: String,
+  githubAccount: String,
+  twitterAccount: String,
+  instagramAccount: String,
+  facebookAccount: String,
 });
 UserSchema.plugin(passportLocalMongoose);
 module.exports = mongoose.model("User", UserSchema);

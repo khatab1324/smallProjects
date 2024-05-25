@@ -49,7 +49,7 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 // =========================session====================
 //  process.env.DB_URL ||
-const dbUrl = "mongodb://localhost:27017/myDatabase";
+const dbUrl = "mongodb://localhost:27017/smallshopify";
 const storeSession = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,

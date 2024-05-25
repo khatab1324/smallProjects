@@ -7,7 +7,7 @@ const Stors = require("../models/store");
 const Product = require("../models/products");
 const users = require("../models/users");
 const StoreReviews = require("../models/StoreReviews");
-
+const dateCalc = require("../lib/function");
 const catchAsync = require("../utile/catchAsync");
 const {
   isLoggedIn,
@@ -59,7 +59,18 @@ router.get(
     const increViews = await Stors.findByIdAndUpdate(id, {
       views: increseviews,
     });
-    res.render("Stores/showStore", { store });
+    console.log(store.author);
+    const { username } = await users.findById(store.author);
+
+    let date = dateCalc(store.dateCreate);
+
+    if (date < 1) {
+      date = "new store";
+    } else {
+      date = `${date} days ago`;
+    }
+
+    res.render("Stores/showStore", { store, username, date });
   })
 );
 
