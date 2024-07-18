@@ -10,6 +10,7 @@ const storeShema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    //contriputers
     images: [
       {
         url: String,
